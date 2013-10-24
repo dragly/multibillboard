@@ -63,10 +63,9 @@ Viewport  {
         eye: Qt.vector3d(21,7,19)
         nearPlane: 5
         farPlane: 50
-
     }
 
-    MultiSphere {
+    MultiBillboard {
         id: multiSphere
         cullFaces: Item3D.CullBackFaces
         sortPoints: Item3D.BackToFront
