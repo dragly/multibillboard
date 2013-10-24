@@ -1,5 +1,5 @@
 # Add more folders to ship with the application, here
-folder_01.source = qml/multisphere
+folder_01.source = qml/multibillboard
 folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 QT += qml quick 3dquick

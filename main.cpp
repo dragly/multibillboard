@@ -18,9 +18,9 @@ int main(int argc, char *argv[])
     view.setFormat(f);
     view.setResizeMode(QQuickView::SizeRootObjectToView);
 #ifdef Q_OS_ANDROID
-    view.setSource(QUrl(QLatin1String("assets:/")+QStringLiteral("qml/multisphere/main.qml")));
+    view.setSource(QUrl(QLatin1String("assets:/")+QStringLiteral("qml/multibillboard/main.qml")));
 #else
-    view.setSource(QUrl::fromLocalFile("qml/multisphere/main.qml"));
+    view.setSource(QUrl::fromLocalFile("qml/multibillboard/main.qml"));
 #endif
     if (QGuiApplication::arguments().contains(QLatin1String("-maximize")))
         view.showMaximized();
