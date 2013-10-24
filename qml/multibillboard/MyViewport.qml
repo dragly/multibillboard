@@ -43,7 +43,6 @@ import Qt3D 2.0
 import Qt3D.Shapes 2.0
 import Dragly 1.0
 
-//! [1]
 Viewport  {
     id: rootViewport
 

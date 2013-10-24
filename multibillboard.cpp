@@ -74,10 +74,10 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
             continue;
         }
         double size = 0.2;
-        a = center - right * (size * 0.5);
-        b = center + right * size * 0.5;
-        c = center + right * size * 0.5 + up * size;
-        d = center - right * size * 0.5 + up * size;
+        a = center - right * size * 0.5 - up * size * 0.5;
+        b = center + right * size * 0.5 - up * size * 0.5;
+        c = center + right * size * 0.5 + up * size * 0.5;
+        d = center - right * size * 0.5 + up * size * 0.5;
         quad.appendVertex(a,b,c,d);
         quad.appendTexCoord(ta, tb, tc, td);
     }
