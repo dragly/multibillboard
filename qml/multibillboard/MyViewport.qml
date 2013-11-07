@@ -48,13 +48,14 @@ Viewport  {
 
     fillColor: "black"
     blending: true
+    fovzoom: false
 
     light: Light {
         ambientColor: Qt.rgba(1,1,1,1)
         position.x: myCamera.eye.x / 2
         position.y: myCamera.eye.y / 2
         position.z: myCamera.eye.z / 2
-        quadraticAttenuation: 0.01
+        quadraticAttenuation: 0.001
     }
 
     camera: Camera {
@@ -77,7 +78,7 @@ Viewport  {
 
     Text {
         color: "white"
-        text: multiSphere.fps.toFixed(2)
+        text: "FPS: " + multiSphere.fps.toFixed(2)
     }
 
     Timer {
