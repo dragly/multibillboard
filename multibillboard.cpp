@@ -45,7 +45,7 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     up.setX(modelViewMatrix(1,0));
     up.setY(modelViewMatrix(1,1));
     up.setZ(modelViewMatrix(1,2));
-//    QGeometryData triangles;
+
     QGLVertexBundle vertexBundle;
     QGLIndexBuffer indexBuffer;
 
