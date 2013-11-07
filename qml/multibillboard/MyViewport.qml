@@ -59,7 +59,7 @@ Viewport  {
 
     camera: Camera {
         id: myCamera
-        eye: Qt.vector3d(21,7,19)
+        eye: Qt.vector3d(35,17,39)
         nearPlane: 5
         farPlane: 50
     }

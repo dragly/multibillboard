@@ -14,7 +14,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
 void MultiBillboard::updatePoints() {
     m_points.clear();
     double spacing = 1;
-    int nPerDim = 20;
+    int nPerDim = 40;
     double frequency = 0.1;
     for(int i = 0; i < nPerDim; i++) {
         for(int j = 0; j < nPerDim; j++) {
@@ -46,7 +46,7 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     up.setY(modelViewMatrix(1,1));
     up.setZ(modelViewMatrix(1,2));
     QGeometryData triangles;
-//    QGLVertexBuffer
+    QGLVertexBundle vertices;
 
 //    if(m_sortPoints == BackToFront) {
 //        QMultiMap<double, QVector3D> sortedPoints;
