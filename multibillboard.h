@@ -60,6 +60,11 @@ private:
     QList<QVector3D> m_points;
     SortMode m_sortPoints;
     double m_fps;
+
+    QArray<QVector3D> vertices;
+    QArray<QVector3D> normals;
+    QArray<QVector2D> texCoords;
+    QArray<uint> indexes;
 };
 
 #endif // MULTISPHERE2_H
