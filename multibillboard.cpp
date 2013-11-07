@@ -1,5 +1,6 @@
 #include "multibillboard.h"
 
+#include <QOpenGLFunctions>
 #include <QGLBuilder>
 #include <QQuickEffect>
 #include <qmath.h>
@@ -41,12 +42,12 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     QGLIndexBuffer indexBuffer;
 
     vertices.clear();
-    normals.clear();
+//    normals.clear();
     texCoords.clear();
     indexes.clear();
 
     vertices.reserve(4*m_points.length());
-    normals.reserve(4*m_points.length());
+//    normals.reserve(4*m_points.length());
     texCoords.reserve(4*m_points.length());
     indexes.reserve(6*m_points.length());
 
@@ -100,16 +101,22 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
         d = center + size * dOffset;
         vertices.append(a, b, c, d);
         texCoords.append(ta, tb, tc, td);
-        normals.append(normal, normal, normal, normal);
+//        normals.append(normal, normal, normal, normal);
         indexes.append(i * 4 + 0, i*4 + 1, i*4 + 2);
         indexes.append(i * 4 + 2, i*4 + 3, i*4 + 0);
     }
     vertexBundle.addAttribute(QGL::Position, vertices);
     vertexBundle.addAttribute(QGL::TextureCoord0, texCoords);
-    vertexBundle.addAttribute(QGL::Normal, normals);
+//    vertexBundle.addAttribute(QGL::Normal, normals);
     indexBuffer.setIndexes(indexes);
 
     painter->clearAttributes();
+    // Set up normal attributes to use only one element
+    painter->glDisableVertexAttribArray(GLuint(QGL::Normal));
+    painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
+    // Set up texture coord attributes to use only four elements
+
+    // Set the rest of the vertex bundle (basically only positions)
     painter->setVertexBundle(vertexBundle);
     painter->draw(QGL::DrawingMode(QGL::Triangles), indexBuffer, 0, indexBuffer.indexCount());
 
