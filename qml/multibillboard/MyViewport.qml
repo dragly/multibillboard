@@ -67,7 +67,7 @@ Viewport  {
     MultiBillboard {
         id: multiSphere
         cullFaces: Item3D.CullBackFaces
-        sortPoints: Item3D.BackToFront
+//        sortPoints: Item3D.BackToFront
         effect: Effect {
             texture: "particle.png"
             blending: true
@@ -83,9 +83,9 @@ Viewport  {
     Timer {
         running: true
         repeat: true
-        interval: 16
+        interval: 1
         onTriggered: {
-            camera.tiltPanRollCenter(0,0.2,0)
+            camera.tiltPanRollCenter(0,0.01,0)
         }
     }
 }

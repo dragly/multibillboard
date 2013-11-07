@@ -59,22 +59,21 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     texCoords.reserve(4*m_points.length());
     indexes.reserve(6*m_points.length());
 
-
-//    if(m_sortPoints == BackToFront) {
-//        QMultiMap<double, QVector3D> sortedPoints;
-//        for(int i = 0; i < m_points.length(); i++) {
-//            const QVector3D &center = m_points.at(i);
-//            const QVector4D &depthVector = painter->modelViewMatrix() * center;
-//            double depth = depthVector.z();
-//            sortedPoints.insert(depth, center);
-//        }
-//        m_points.clear();
-//        QMapIterator<double, QVector3D> i(sortedPoints);
-//        while(i.hasNext()) {
-//            m_points.push_back(i.next().value());
-//        }
-//        sortedPoints.clear();
-//    }
+    if(m_sortPoints == BackToFront) {
+        QMultiMap<double, QVector3D> sortedPoints;
+        for(int i = 0; i < m_points.length(); i++) {
+            const QVector3D &center = m_points.at(i);
+            const QVector4D &depthVector = painter->modelViewMatrix() * center;
+            double depth = depthVector.z();
+            sortedPoints.insert(depth, center);
+        }
+        m_points.clear();
+        QMapIterator<double, QVector3D> i(sortedPoints);
+        while(i.hasNext()) {
+            m_points.push_back(i.next().value());
+        }
+        sortedPoints.clear();
+    }
 
     QVector3D a;
     QVector3D b;
@@ -95,14 +94,9 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
         b = center + right * size * 0.5 - up * size * 0.5;
         c = center + right * size * 0.5 + up * size * 0.5;
         d = center - right * size * 0.5 + up * size * 0.5;
-//        triangles.appendVertex(a,b,c,d);
         vertices.append(a, b, c, d);
-//        triangles.appendTexCoord(ta, tb, tc, td);
         texCoords.append(ta, tb, tc, td);
-//        triangles.appendNormal(normal, normal, normal, normal);
         normals.append(normal, normal, normal, normal);
-//        triangles.appendIndices(i * 4 + 0, i*4 + 1, i*4 + 2);
-//        triangles.appendIndices(i * 4 + 2, i*4 + 3, i*4 + 0);
         indexes.append(i * 4 + 0, i*4 + 1, i*4 + 2);
         indexes.append(i * 4 + 2, i*4 + 3, i*4 + 0);
     }
@@ -111,17 +105,9 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     vertexBundle.addAttribute(QGL::Normal, normals);
     indexBuffer.setIndexes(indexes);
 
-//    vertexBundle.upload();
-//    indexBuffer.upload();
-    //    }
-//    builder.addQuads(triangles);
-//    QGLSceneNode* geometry = builder.finalizedSceneNode();
-//    if(m_geometry) {
-//        delete m_geometry;
-//    }
-//    m_geometry = geometry;
-//    m_geometry->draw(painter);
-//    triangles.draw(painter,0,triangles.indices().size());
+    painter->clearAttributes();
+    painter->setVertexBundle(vertexBundle);
+    painter->draw(QGL::DrawingMode(QGL::Triangles), indexBuffer, 0, indexBuffer.indexCount());
 
 }
 
