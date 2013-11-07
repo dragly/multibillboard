@@ -15,7 +15,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
 void MultiBillboard::updatePoints() {
     m_points.clear();
     double spacing = 1;
-    int nPerDim = 70;
+    int nPerDim = 77;
     double frequency = 0.1;
     for(int i = 0; i < nPerDim; i++) {
         for(int j = 0; j < nPerDim; j++) {
@@ -114,7 +114,6 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     // Set up normal attributes to use only one element
     painter->glDisableVertexAttribArray(GLuint(QGL::Normal));
     painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
-    // Set up texture coord attributes to use only four elements
 
     // Set the rest of the vertex bundle (basically only positions)
     painter->setVertexBundle(vertexBundle);
