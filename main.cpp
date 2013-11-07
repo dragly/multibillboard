@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     QSurfaceFormat f;
     f.setSamples(0);
-//    f.setOption(QSurfaceFormat::StereoBuffers);
     QQuickView view;
     view.setFormat(f);
     view.setResizeMode(QQuickView::SizeRootObjectToView);

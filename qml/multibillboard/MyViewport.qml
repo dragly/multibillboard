@@ -74,4 +74,18 @@ Viewport  {
             useLighting: true
         }
     }
+
+    Text {
+        color: "white"
+        text: multiSphere.fps.toFixed(2)
+    }
+
+    Timer {
+        running: true
+        repeat: true
+        interval: 16
+        onTriggered: {
+            camera.tiltPanRollCenter(0,0.2,0)
+        }
+    }
 }

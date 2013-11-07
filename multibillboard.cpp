@@ -30,9 +30,12 @@ void MultiBillboard::updatePoints() {
 }
 
 void MultiBillboard::drawItem(QGLPainter *painter) {
+    double currentFps = 1000.0 / fpsTimer.restart();
+    m_fps = 0.9*m_fps + 0.1 * currentFps;
+    emit fpsChanged(m_fps);
     // Build the mesh
-    QGLBuilder builder;
-    builder.newSection(QGL::NoSmoothing);
+//    QGLBuilder builder;
+//    builder.newSection(QGL::NoSmoothing);
     const QMatrix4x4 &modelViewMatrix = painter->modelViewMatrix();
     QVector3D right;
     right.setX(modelViewMatrix(0,0));
@@ -42,23 +45,24 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     up.setX(modelViewMatrix(1,0));
     up.setY(modelViewMatrix(1,1));
     up.setZ(modelViewMatrix(1,2));
-    QGeometryData quad;
+    QGeometryData triangles;
+//    QGLVertexBuffer
 
-    if(m_sortPoints == BackToFront) {
-        QMultiMap<double, QVector3D> sortedPoints;
-        for(int i = 0; i < m_points.length(); i++) {
-            const QVector3D &center = m_points.at(i);
-            const QVector4D &depthVector = painter->modelViewMatrix() * center;
-            double depth = depthVector.z();
-            sortedPoints.insert(depth, center);
-        }
-        m_points.clear();
-        QMapIterator<double, QVector3D> i(sortedPoints);
-        while(i.hasNext()) {
-            m_points.push_back(i.next().value());
-        }
-        sortedPoints.clear();
-    }
+//    if(m_sortPoints == BackToFront) {
+//        QMultiMap<double, QVector3D> sortedPoints;
+//        for(int i = 0; i < m_points.length(); i++) {
+//            const QVector3D &center = m_points.at(i);
+//            const QVector4D &depthVector = painter->modelViewMatrix() * center;
+//            double depth = depthVector.z();
+//            sortedPoints.insert(depth, center);
+//        }
+//        m_points.clear();
+//        QMapIterator<double, QVector3D> i(sortedPoints);
+//        while(i.hasNext()) {
+//            m_points.push_back(i.next().value());
+//        }
+//        sortedPoints.clear();
+//    }
 
     QVector3D a;
     QVector3D b;
@@ -68,27 +72,32 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     QVector2D tb(0,1);
     QVector2D tc(1,1);
     QVector2D td(1,0);
+    QVector3D normal(QVector3D::crossProduct(right, up));
     for(int i = 0; i < m_points.length(); i++) {
         const QVector3D &center = m_points.at(i);
-        if(painter->isCullable(center)) {
-            continue;
-        }
+//        if(painter->isCullable(center)) {
+//            continue;
+//        }
         double size = 0.2;
         a = center - right * size * 0.5 - up * size * 0.5;
         b = center + right * size * 0.5 - up * size * 0.5;
         c = center + right * size * 0.5 + up * size * 0.5;
         d = center - right * size * 0.5 + up * size * 0.5;
-        quad.appendVertex(a,b,c,d);
-        quad.appendTexCoord(ta, tb, tc, td);
+        triangles.appendVertex(a,b,c,d);
+        triangles.appendTexCoord(ta, tb, tc, td);
+        triangles.appendNormal(normal, normal, normal, normal);
+        triangles.appendIndices(i * 4 + 0, i*4 + 1, i*4 + 2);
+        triangles.appendIndices(i * 4 + 2, i*4 + 3, i*4 + 0);
     }
     //    }
-    builder.addQuads(quad);
-    QGLSceneNode* geometry = builder.finalizedSceneNode();
-    if(m_geometry) {
-        delete m_geometry;
-    }
-    m_geometry = geometry;
-    m_geometry->draw(painter);
+//    builder.addQuads(triangles);
+//    QGLSceneNode* geometry = builder.finalizedSceneNode();
+//    if(m_geometry) {
+//        delete m_geometry;
+//    }
+//    m_geometry = geometry;
+//    m_geometry->draw(painter);
+    triangles.draw(painter,0,triangles.indices().size());
 }
 
 MultiBillboard::~MultiBillboard()

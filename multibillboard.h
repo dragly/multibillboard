@@ -9,6 +9,7 @@ class MultiBillboard : public QQuickItem3D
 {
     Q_OBJECT
     Q_PROPERTY(SortMode sortPoints READ sortPoints WRITE setSortPoints NOTIFY sortPointsChanged)
+    Q_PROPERTY(double fps READ fps NOTIFY fpsChanged)
 
 public:
     explicit MultiBillboard(QQuickItem *parent = 0);
@@ -20,6 +21,11 @@ public:
     }
 
     void updatePoints();
+    double fps() const
+    {
+        return m_fps;
+    }
+
 protected:
     void drawItem(QGLPainter *painter);
 signals:
@@ -29,6 +35,8 @@ signals:
     void frequencyChanged(double arg);
 
     void sortPointsChanged(SortMode arg);
+
+    void fpsChanged(double arg);
 
 public slots:
 
@@ -43,6 +51,7 @@ public slots:
     }
 
 private:
+    QElapsedTimer fpsTimer;
     QGLSceneNode *m_topNode;
     bool m_sceneSet;
     QGLSceneNode* m_geometry;
@@ -50,6 +59,7 @@ private:
 
     QList<QVector3D> m_points;
     SortMode m_sortPoints;
+    double m_fps;
 };
 
 #endif // MULTISPHERE2_H
