@@ -59,9 +59,9 @@ Viewport  {
 
     camera: Camera {
         id: myCamera
-        eye: Qt.vector3d(35,17,39)
+        eye: Qt.vector3d(75,75,45)
         nearPlane: 5
-        farPlane: 50
+        farPlane: 5000
     }
 
     MultiBillboard {

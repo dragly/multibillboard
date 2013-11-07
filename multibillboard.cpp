@@ -14,7 +14,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
 void MultiBillboard::updatePoints() {
     m_points.clear();
     double spacing = 1;
-    int nPerDim = 40;
+    int nPerDim = 60;
     double frequency = 0.1;
     for(int i = 0; i < nPerDim; i++) {
         for(int j = 0; j < nPerDim; j++) {
@@ -36,15 +36,6 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     // Build the mesh
 //    QGLBuilder builder;
 //    builder.newSection(QGL::NoSmoothing);
-    const QMatrix4x4 &modelViewMatrix = painter->modelViewMatrix();
-    QVector3D right;
-    right.setX(modelViewMatrix(0,0));
-    right.setY(modelViewMatrix(0,1));
-    right.setZ(modelViewMatrix(0,2));
-    QVector3D up;
-    up.setX(modelViewMatrix(1,0));
-    up.setY(modelViewMatrix(1,1));
-    up.setZ(modelViewMatrix(1,2));
 
     QGLVertexBundle vertexBundle;
     QGLIndexBuffer indexBuffer;
@@ -75,10 +66,23 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
         sortedPoints.clear();
     }
 
+    const QMatrix4x4 &modelViewMatrix = painter->modelViewMatrix();
+    QVector3D right;
+    right.setX(modelViewMatrix(0,0));
+    right.setY(modelViewMatrix(0,1));
+    right.setZ(modelViewMatrix(0,2));
+    QVector3D up;
+    up.setX(modelViewMatrix(1,0));
+    up.setY(modelViewMatrix(1,1));
+    up.setZ(modelViewMatrix(1,2));
     QVector3D a;
     QVector3D b;
     QVector3D c;
     QVector3D d;
+    QVector3D aOffset =  - right * 0.5 - up * 0.5;
+    QVector3D bOffset =  right * 0.5 - up * 0.5;
+    QVector3D cOffset =  right * 0.5 + up * 0.5;
+    QVector3D dOffset =  - right * 0.5 + up * 0.5;
     QVector2D ta(0,0);
     QVector2D tb(0,1);
     QVector2D tc(1,1);
@@ -90,10 +94,10 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
 //            continue;
 //        }
         double size = 0.2;
-        a = center - right * size * 0.5 - up * size * 0.5;
-        b = center + right * size * 0.5 - up * size * 0.5;
-        c = center + right * size * 0.5 + up * size * 0.5;
-        d = center - right * size * 0.5 + up * size * 0.5;
+        a = center + size * aOffset;
+        b = center + size * bOffset;
+        c = center + size * cOffset;
+        d = center + size * dOffset;
         vertices.append(a, b, c, d);
         texCoords.append(ta, tb, tc, td);
         normals.append(normal, normal, normal, normal);
