@@ -27,3 +27,9 @@ include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
 OTHER_FILES += README.md
+
+
+QMAKE_CXXFLAGS += -std=c++0x
+
+
+LIBS += -lX11
