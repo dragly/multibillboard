@@ -59,7 +59,7 @@ private:
     QGLSceneNode* m_geometry;
     QGLAbstractScene *scene;
 
-    QList<QVector3D> m_points;
+    QArray<QVector3D> m_points;
     SortMode m_sortPoints;
     double m_fps;
 
