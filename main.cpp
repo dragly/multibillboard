@@ -60,6 +60,8 @@ int main(int argc, char *argv[])
     QRect virtualGeometry = app.screens().at(0)->virtualGeometry();
     QSurfaceFormat f;
     f.setSamples(0);
+    f.setMajorVersion(3);
+    f.setMinorVersion(3);
     QQuickView view;
     view.setFormat(f);
     view.setResizeMode(QQuickView::SizeRootObjectToView);

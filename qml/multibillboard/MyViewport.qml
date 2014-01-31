@@ -55,19 +55,19 @@ Viewport  {
         position.x: myCamera.eye.x / 2
         position.y: myCamera.eye.y / 2
         position.z: myCamera.eye.z / 2
-        quadraticAttenuation: 0.001
+        quadraticAttenuation: 0.0001
     }
 
     camera: Camera {
         id: myCamera
-        eye: Qt.vector3d(75,75,45)
+        eye: Qt.vector3d(175,175,45)
         nearPlane: 5
         farPlane: 5000
     }
 
     MultiBillboard {
         id: multiSphere
-        cullFaces: Item3D.CullBackFaces
+//        cullFaces: Item3D.CullBackFaces
 //        sortPoints: Item3D.BackToFront
         effect: Effect {
             texture: "particle.png"
