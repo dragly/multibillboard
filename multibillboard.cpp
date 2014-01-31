@@ -12,6 +12,28 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
     m_sortPoints(DefaultSorting)
 {
+    effect = new CustomEffect();
+    effect->setVertexShader("#version 330 core\n"
+                            "in vec4 qt_Vertex;"
+                            "uniform mat4 qt_ModelViewProjectionMatrix;"
+                            "out vec2 texCoord;"
+                            "in vec2 qt_MultiTexCoord0;"
+                            ""
+                            "void main(void)"
+                            "{"
+                            "   texCoord = qt_MultiTexCoord0;"
+                                "gl_Position = qt_ModelViewProjectionMatrix * qt_Vertex;"
+                            "}");
+    effect->setFragmentShader("#version 330 core\n"
+                              "out vec4 MyFragColor;"
+                              "in vec2 texCoord;"
+                              "uniform sampler2D qt_Texture0;"
+                              ""
+                              "void main(void) {"
+                              "    MyFragColor = texture2D(qt_Texture0, texCoord.st);"
+//                              "    MyFragColor = vec4(1.0, 0.0, 0.0, 1.0);"
+                              "}"
+                              "");
     updatePoints();
 }
 
@@ -104,8 +126,10 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
         c = center + size * cOffset;
         d = center + size * dOffset;
         vertices.append(a, b, c, d);
+//        vertices.append(center);
         texCoords.append(ta, tb, tc, td);
 //        normals.append(normal, normal, normal, normal);
+//        indexes.append(i);
         indexes.append(i*4 + 0, i*4 + 1, i*4 + 2);
         indexes.append(i*4 + 2, i*4 + 3, i*4 + 0);
     }
@@ -116,11 +140,12 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
 
     painter->clearAttributes();
     // Set up normal attributes to use only one element
-    painter->glDisableVertexAttribArray(GLuint(QGL::Normal));
-    painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
+//    painter->glDisableVertexAttribArray(GLuint(QGL::Normal));
+//    painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
 
     // Set the rest of the vertex bundle (basically only positions)
     painter->setVertexBundle(vertexBundle);
+    painter->setUserEffect(effect);
     painter->draw(QGL::DrawingMode(QGL::Triangles), indexBuffer, 0, indexBuffer.indexCount());
 }
 

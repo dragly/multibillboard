@@ -67,7 +67,7 @@ Viewport  {
 
     MultiBillboard {
         id: multiSphere
-        cullFaces: Item3D.CullBackFaces
+//        cullFaces: Item3D.CullBackFaces
 //        sortPoints: Item3D.BackToFront
         effect: Effect {
             texture: "particle.png"

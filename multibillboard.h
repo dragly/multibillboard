@@ -1,6 +1,8 @@
 #ifndef MULTISPHERE2_H
 #define MULTISPHERE2_H
 
+#include "customeffect.h"
+
 #include <QQuickItem3D>
 #include <QGLAbstractScene>
 #include <QElapsedTimer>
@@ -65,6 +67,8 @@ private:
     QArray<QVector3D> normals;
     QArray<QVector2D> texCoords;
     QArray<uint> indexes;
+
+    CustomEffect* effect;
 };
 
 #endif // MULTISPHERE2_H
