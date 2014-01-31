@@ -40,7 +40,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
 void MultiBillboard::updatePoints() {
     m_points.clear();
     double spacing = 1;
-    int nPerDim = 90;
+    int nPerDim = 150;
     double frequency = 0.1;
     for(int i = 0; i < nPerDim; i++) {
         for(int j = 0; j < nPerDim; j++) {
@@ -110,11 +110,11 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     QVector3D bOffset =  right * 0.5 - up * 0.5;
     QVector3D cOffset =  right * 0.5 + up * 0.5;
     QVector3D dOffset =  - right * 0.5 + up * 0.5;
-    QVector2D ta(0,0);
-    QVector2D tb(0,1);
-    QVector2D tc(1,1);
-    QVector2D td(1,0);
-    QVector3D normal(QVector3D::crossProduct(right, up));
+//    QVector2D ta(0,0);
+//    QVector2D tb(0,1);
+//    QVector2D tc(1,1);
+//    QVector2D td(1,0);
+//    QVector3D normal(QVector3D::crossProduct(right, up));
     for(int i = 0; i < m_points.length(); i++) {
         const QVector3D &center = m_points.at(i);
 //        if(painter->isCullable(center)) {
@@ -125,13 +125,13 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
         b = center + size * bOffset;
         c = center + size * cOffset;
         d = center + size * dOffset;
-        vertices.append(a, b, c, d);
-//        vertices.append(center);
-        texCoords.append(ta, tb, tc, td);
+//        vertices.append(a, b, c, d);
+        vertices.append(center);
+//        texCoords.append(ta, tb, tc, td);
 //        normals.append(normal, normal, normal, normal);
-//        indexes.append(i);
-        indexes.append(i*4 + 0, i*4 + 1, i*4 + 2);
-        indexes.append(i*4 + 2, i*4 + 3, i*4 + 0);
+        indexes.append(i);
+//        indexes.append(i*4 + 0, i*4 + 1, i*4 + 2);
+//        indexes.append(i*4 + 2, i*4 + 3, i*4 + 0);
     }
     vertexBundle.addAttribute(QGL::Position, vertices);
     vertexBundle.addAttribute(QGL::TextureCoord0, texCoords);
@@ -146,7 +146,7 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     // Set the rest of the vertex bundle (basically only positions)
     painter->setVertexBundle(vertexBundle);
     painter->setUserEffect(effect);
-    painter->draw(QGL::DrawingMode(QGL::Triangles), indexBuffer, 0, indexBuffer.indexCount());
+    painter->draw(QGL::DrawingMode(QGL::Points), indexBuffer, 0, indexBuffer.indexCount());
 }
 
 MultiBillboard::~MultiBillboard()
