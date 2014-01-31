@@ -55,7 +55,7 @@ Viewport  {
         position.x: myCamera.eye.x / 2
         position.y: myCamera.eye.y / 2
         position.z: myCamera.eye.z / 2
-        quadraticAttenuation: 0.001
+        quadraticAttenuation: 0.0001
     }
 
     camera: Camera {

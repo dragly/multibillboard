@@ -4,6 +4,9 @@
 #include <QGLBuilder>
 #include <QQuickEffect>
 #include <qmath.h>
+#include <iostream>
+
+using namespace std;
 
 MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
@@ -15,7 +18,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
 void MultiBillboard::updatePoints() {
     m_points.clear();
     double spacing = 1;
-    int nPerDim = 77;
+    int nPerDim = 90;
     double frequency = 0.1;
     for(int i = 0; i < nPerDim; i++) {
         for(int j = 0; j < nPerDim; j++) {
@@ -28,6 +31,7 @@ void MultiBillboard::updatePoints() {
             }
         }
     }
+    cout << "Showing a total of " << m_points.size() << " points." << endl;
 }
 
 void MultiBillboard::drawItem(QGLPainter *painter) {
@@ -102,8 +106,8 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
         vertices.append(a, b, c, d);
         texCoords.append(ta, tb, tc, td);
 //        normals.append(normal, normal, normal, normal);
-        indexes.append(i * 4 + 0, i*4 + 1, i*4 + 2);
-        indexes.append(i * 4 + 2, i*4 + 3, i*4 + 0);
+        indexes.append(i*4 + 0, i*4 + 1, i*4 + 2);
+        indexes.append(i*4 + 2, i*4 + 3, i*4 + 0);
     }
     vertexBundle.addAttribute(QGL::Position, vertices);
     vertexBundle.addAttribute(QGL::TextureCoord0, texCoords);
@@ -118,7 +122,6 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
     // Set the rest of the vertex bundle (basically only positions)
     painter->setVertexBundle(vertexBundle);
     painter->draw(QGL::DrawingMode(QGL::Triangles), indexBuffer, 0, indexBuffer.indexCount());
-
 }
 
 MultiBillboard::~MultiBillboard()
