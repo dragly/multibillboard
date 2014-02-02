@@ -68,6 +68,8 @@ private:
     QArray<QVector2D> texCoords;
 
     CustomEffect* effect;
+
+    bool firstPaint;
 };
 
 #endif // MULTISPHERE2_H

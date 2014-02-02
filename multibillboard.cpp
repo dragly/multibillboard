@@ -5,12 +5,15 @@
 #include <QQuickEffect>
 #include <qmath.h>
 #include <iostream>
+#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_0_Core>
 
 using namespace std;
 
 MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
-    m_sortPoints(DefaultSorting)
+    m_sortPoints(DefaultSorting),
+    firstPaint(true)
 {
     effect = new CustomEffect();
     updatePoints();
@@ -19,7 +22,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
 void MultiBillboard::updatePoints() {
     m_points.clear();
     double spacing = 1;
-    int nPerDim = 200;
+    int nPerDim = 100;
     double frequency = 0.1;
     for(int i = 0; i < nPerDim; i++) {
         for(int j = 0; j < nPerDim; j++) {
@@ -36,6 +39,17 @@ void MultiBillboard::updatePoints() {
 }
 
 void MultiBillboard::drawItem(QGLPainter *painter) {
+    if(firstPaint) {
+        const QSurfaceFormat& format = painter->context()->format();
+        if ( ! (format.majorVersion() > 3 || (format.majorVersion() == 3 && format.minorVersion() >= 3)) )
+        {
+            qDebug() << "Only got version " << format.majorVersion() << "." << format.minorVersion();
+            qFatal("MultiBillboard requires OpenGL >= 3.3");
+            exit( 1 );
+        }
+        firstPaint = false;
+    }
+
     double currentFps = 1000.0 / fpsTimer.restart();
     m_fps = 0.9*m_fps + 0.1 * currentFps;
     emit fpsChanged(m_fps);
