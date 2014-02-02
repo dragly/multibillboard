@@ -64,12 +64,16 @@ private:
     double m_fps;
 
     QArray<QVector3D> vertices;
+    QArray<uint> indices;
     QArray<QVector3D> normals;
     QArray<QVector2D> texCoords;
 
     CustomEffect* effect;
 
     bool firstPaint;
+    bool useGeometryShader;
+    void drawCPUBillboards(QGLPainter *painter);
+    void drawGeometryShaderBillboards(QGLPainter *painter);
 };
 
 #endif // MULTISPHERE2_H
