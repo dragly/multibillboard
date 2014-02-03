@@ -40,11 +40,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
 void MultiBillboard::updatePoints() {
     m_points.clear();
     double spacing = 1;
-<<<<<<< HEAD
-    int nPerDim = 50;
-=======
     int nPerDim = 250;
->>>>>>> a896431892998f9206fffadd71583f070b3893d1
     double frequency = 0.1;
     for(int i = 0; i < nPerDim; i++) {
         for(int j = 0; j < nPerDim; j++) {

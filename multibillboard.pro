@@ -31,7 +31,7 @@ qtcAddDeployment()
 OTHER_FILES += README.md
 
 
-QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -std=c++0x -g
 
 
 LIBS += -lX11
