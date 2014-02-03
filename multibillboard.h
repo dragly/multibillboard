@@ -66,9 +66,10 @@ private:
     QArray<QVector3D> vertices;
     QArray<QVector3D> normals;
     QArray<QVector2D> texCoords;
-    QArray<uint> indexes;
 
     CustomEffect* effect;
+
+    bool firstPaint;
 };
 
 #endif // MULTISPHERE2_H
