@@ -1,11 +1,9 @@
 #version 330
-in vec4 litColor;
-in vec4 litSecondaryColor;
-in vec4 qt_TexCoord0;
+out vec4 MyFragColor;
+in vec2 texCoord;
+in vec4 someColorOut;
 uniform sampler2D qt_Texture0;
 
-void main(void)
-{
-    vec4 color = litColor * texture2D(qt_Texture0, qt_TexCoord0.st);
-    gl_FragColor = clamp(color + litSecondaryColor, 0.0, 1.0);
+void main(void) {
+    MyFragColor = texture2D(qt_Texture0, texCoord.st);
 }

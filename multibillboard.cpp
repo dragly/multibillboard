@@ -40,7 +40,11 @@ void MultiBillboard::updatePoints() {
 }
 
 void MultiBillboard::drawItem(QGLPainter *painter) {
+
     if(firstPaint) {
+        if(effect()) {
+            qDebug() << "Effect set from QML, should copy properties";
+        }
         const QSurfaceFormat& format = painter->context()->format();
         qDebug() << "MultiBillboard: OpenGL version " << format.majorVersion() << "." << format.minorVersion();
         if ( ! (format.majorVersion() > 3 || (format.majorVersion() == 3 && format.minorVersion() >= 3)) )
