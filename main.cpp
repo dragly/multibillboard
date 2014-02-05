@@ -5,6 +5,7 @@
 
 #include <QtGui/QGuiApplication>
 #include <QtQuick/qquickview.h>
+#include <qtquick2applicationviewer/qtquick2applicationviewer.h>
 
 #include <QtCore/qdebug.h>
 
@@ -16,14 +17,10 @@ int main(int argc, char *argv[])
     f.setSamples(0);
     f.setMajorVersion(3);
     f.setMinorVersion(3);
-    QQuickView view;
+    QtQuick2ApplicationViewer view;
     view.setFormat(f);
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-#ifdef Q_OS_ANDROID
-    view.setSource(QUrl(QLatin1String("assets:/")+QStringLiteral("qml/multibillboard/main.qml")));
-#else
-    view.setSource(QUrl::fromLocalFile("qml/multibillboard/main.qml"));
-#endif
+    view.setMainQmlFile("qml/multibillboard/main.qml");
     if (QGuiApplication::arguments().contains(QLatin1String("-maximize")))
         view.showMaximized();
     else if (QGuiApplication::arguments().contains(QLatin1String("-fullscreen")))
