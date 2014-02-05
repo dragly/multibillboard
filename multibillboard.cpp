@@ -89,9 +89,26 @@ void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
 
     painter->clearAttributes();
 
+    // Setting our custom effect must be done before passing any data
+    painter->setUserEffect(m_effect);
+
+    // After the effect has been set, we may start passing data (perhaps the effect resets some painter props?)
+
+    const QMatrix4x4 &modelViewMatrix = painter->modelViewMatrix();
+    QVector3D right;
+    right.setX(modelViewMatrix(0,0));
+    right.setY(modelViewMatrix(0,1));
+    right.setZ(modelViewMatrix(0,2));
+    QVector3D up;
+    up.setX(modelViewMatrix(1,0));
+    up.setY(modelViewMatrix(1,1));
+    up.setZ(modelViewMatrix(1,2));
+    QVector3D normal(QVector3D::crossProduct(right, up));
+    painter->glDisableVertexAttribArray(GLuint(QGL::Normal));
+    painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
+
     // Set the rest of the vertex bundle (basically only positions)
     painter->setVertexBundle(vertexBundle);
-    painter->setUserEffect(m_effect);
     painter->draw(QGL::DrawingMode(QGL::Points), vertexBundle.vertexCount());
 }
 
