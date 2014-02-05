@@ -6,25 +6,27 @@ CustomEffect::CustomEffect() :
     QGLShaderProgramEffect()
 {
     setVertexShader("#version 330\n"
-                            "in vec4 qt_Vertex;"
-                            "uniform mat4 qt_ModelViewProjectionMatrix;"
-                            "out vec2 texCoord;"
-                            "in vec2 qt_MultiTexCoord0;"
-                            ""
-                            "void main(void)"
-                            "{"
-                            "   texCoord = qt_MultiTexCoord0;"
-                            "gl_Position = qt_ModelViewProjectionMatrix * qt_Vertex;"
-                            "}");
+                    "in vec4 qt_Vertex;"
+                    "uniform mat4 qt_ModelViewProjectionMatrix;"
+                    "out vec2 texCoord;"
+                    "in vec2 qt_MultiTexCoord0;"
+                    ""
+                    "void main(void)"
+                    "{"
+                    "   texCoord = qt_MultiTexCoord0;"
+                    "   gl_Position = qt_ModelViewProjectionMatrix * qt_Vertex;"
+                    "}");
     setFragmentShader("#version 330\n"
-                              "out vec4 MyFragColor;"
-                              "in vec2 texCoord;"
-                              "uniform sampler2D qt_Texture0;"
-                              ""
-                              "void main(void) {"
-                              "    MyFragColor = texture2D(qt_Texture0, texCoord.st);"
-                              "}"
-                              "");
+                      "out vec4 MyFragColor;\n"
+                      "in vec2 texCoord;\n"
+                      "uniform sampler2D qt_Texture0;\n"
+                      ""
+                      "void main(void) {\n"
+                      "    MyFragColor = texture2D(qt_Texture0, texCoord.st);"
+                      "}"
+                      "");
+//    setVertexShaderFromFile("qml/multibillboard/vertexlighting.glsl");
+//    setFragmentShaderFromFile("qml/multibillboard/fragmentlighting.glsl");
 }
 
 bool CustomEffect::beforeLink() {
@@ -54,7 +56,7 @@ bool CustomEffect::beforeLink() {
             "    EndPrimitive();\n"
             "}\n";
     if(!program()->addShaderFromSourceCode(QOpenGLShader::Geometry,
-                                       geometryString)) {
+                                           geometryString)) {
         qCritical() << "Could not compile geometry shader! Log: \n"
                     << program()->log();
     }

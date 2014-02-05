@@ -68,7 +68,7 @@ private:
     QArray<QVector3D> normals;
     QArray<QVector2D> texCoords;
 
-    CustomEffect* effect;
+    CustomEffect* m_effect;
 
     bool firstPaint;
     bool useGeometryShader;

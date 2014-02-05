@@ -16,7 +16,7 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
     firstPaint(true),
     useGeometryShader(false)
 {
-    effect = new CustomEffect();
+    m_effect = new CustomEffect();
     updatePoints();
 }
 
@@ -87,7 +87,7 @@ void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
 
     // Set the rest of the vertex bundle (basically only positions)
     painter->setVertexBundle(vertexBundle);
-    painter->setUserEffect(effect);
+    painter->setUserEffect(m_effect);
     painter->draw(QGL::DrawingMode(QGL::Points), vertexBundle.vertexCount());
 }
 
