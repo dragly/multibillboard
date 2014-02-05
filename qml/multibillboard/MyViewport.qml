@@ -52,9 +52,9 @@ Viewport  {
 
     light: Light {
         ambientColor: Qt.rgba(1,1,1,1)
-        position.x: myCamera.eye.x / 2
-        position.y: myCamera.eye.y / 2
-        position.z: myCamera.eye.z / 2
+        position.x: myCamera.eye.normalized().x * 70
+        position.y: myCamera.eye.normalized().y * 70
+        position.z: myCamera.eye.normalized().z * 70
         quadraticAttenuation: 0.0001
     }
 
