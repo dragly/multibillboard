@@ -65,10 +65,17 @@ Viewport  {
         farPlane: 5000
     }
 
+    ExampleDataSource {
+        id: exampleDataSource
+        numPointsPerDimension: 70
+    }
+
     MultiBillboard {
         id: multiSphere
+        dataSource: exampleDataSource
 //        cullFaces: Item3D.CullBackFaces
 //        sortPoints: Item3D.BackToFront
+
         effect: Effect {
             texture: "particle.png"
             blending: true
