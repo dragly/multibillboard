@@ -2,6 +2,7 @@
 #define MULTISPHERE2_H
 
 #include "customeffect.h"
+#include "datasource.h"
 
 #include <QQuickItem3D>
 #include <QGLAbstractScene>
@@ -10,22 +11,21 @@
 class MultiBillboard : public QQuickItem3D
 {
     Q_OBJECT
-    Q_PROPERTY(SortMode sortPoints READ sortPoints WRITE setSortPoints NOTIFY sortPointsChanged)
+    Q_PROPERTY(DataSource *dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
     Q_PROPERTY(double fps READ fps NOTIFY fpsChanged)
 
 public:
     explicit MultiBillboard(QQuickItem *parent = 0);
     ~MultiBillboard();
 
-    SortMode sortPoints() const
-    {
-        return m_sortPoints;
-    }
-
-    void updatePoints();
     double fps() const
     {
         return m_fps;
+    }
+
+    DataSource *dataSource() const
+    {
+        return m_dataSource;
     }
 
 protected:
@@ -36,19 +36,16 @@ signals:
 
     void frequencyChanged(double arg);
 
-    void sortPointsChanged(SortMode arg);
-
     void fpsChanged(double arg);
 
-public slots:
+    void dataSourceChanged(DataSource *arg);
 
-    void setSortPoints(SortMode arg)
+public slots:
+    void setDataSource(DataSource *arg)
     {
-        if (m_sortPoints != arg) {
-            m_sortPoints = arg;
-            emit sortPointsChanged(arg);
-            updatePoints();
-            update();
+        if (m_dataSource != arg) {
+            m_dataSource = arg;
+            emit dataSourceChanged(arg);
         }
     }
 
@@ -59,17 +56,21 @@ private:
     QGLSceneNode* m_geometry;
     QGLAbstractScene *scene;
 
-    QArray<QVector3D> m_points;
-    SortMode m_sortPoints;
     double m_fps;
 
     QArray<QVector3D> vertices;
+    QArray<uint> indices;
     QArray<QVector3D> normals;
+    QArray<QColor4ub> colorArray;
     QArray<QVector2D> texCoords;
 
-    CustomEffect* effect;
+    CustomEffect* m_effect;
 
     bool firstPaint;
+    bool useGeometryShader;
+    void drawCPUBillboards(QGLPainter *painter);
+    void drawGeometryShaderBillboards(QGLPainter *painter);
+    DataSource *m_dataSource;
 };
 
 #endif // MULTISPHERE2_H

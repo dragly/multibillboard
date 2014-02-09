@@ -41,7 +41,8 @@
 import QtQuick 2.0
 import Qt3D 2.0
 import Qt3D.Shapes 2.0
-import Dragly 1.0
+import CompPhys.MultiBillboard 1.0
+import CompPhys.MultiBillboardDemo 1.0
 
 Viewport  {
     id: rootViewport
@@ -52,9 +53,9 @@ Viewport  {
 
     light: Light {
         ambientColor: Qt.rgba(1,1,1,1)
-        position.x: myCamera.eye.x / 2
-        position.y: myCamera.eye.y / 2
-        position.z: myCamera.eye.z / 2
+        position.x: myCamera.eye.normalized().x * 70
+        position.y: myCamera.eye.normalized().y * 70
+        position.z: myCamera.eye.normalized().z * 70
         quadraticAttenuation: 0.0001
     }
 
@@ -65,12 +66,19 @@ Viewport  {
         farPlane: 5000
     }
 
+    ExampleDataSource {
+        id: exampleDataSource
+        numPointsPerDimension: 70
+    }
+
     MultiBillboard {
         id: multiSphere
+        dataSource: exampleDataSource
 //        cullFaces: Item3D.CullBackFaces
 //        sortPoints: Item3D.BackToFront
+
         effect: Effect {
-            texture: "particle.png"
+            texture: "sphere2-green.png"
             blending: true
             useLighting: true
         }
@@ -86,7 +94,7 @@ Viewport  {
         repeat: true
         interval: 1
         onTriggered: {
-            camera.tiltPanRollCenter(0,0.01,0)
+            myCamera.tiltPanRollCenter(0,0.01,0)
         }
     }
 }
