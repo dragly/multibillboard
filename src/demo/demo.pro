@@ -39,7 +39,7 @@ macx {
     LIBS_TARGET_DIR = $$OUT_PWD/$${TARGET}.app/Contents/Resources/
     LIBS_APP_DIR = $$OUT_PWD/$${TARGET}.app/Contents/MacOS/
 
-    copydata.commands = $(COPY_DIR) $$PWD/qml $$OUT_PWD/../libs/MultiBillboard $$LIBS_TARGET_DIR && $(COPY_DIR) $$OUT_PWD/../libs/$$TARGET/lib$${TARGET}.dylib $$LIBS_TARGET_DIR
+    copydata.commands = $(COPY_DIR) $$PWD/qml $$OUT_PWD/../libs/MultiBillboard $$LIBS_TARGET_DIR && $(COPY_DIR) $$OUT_PWD/../libs/MultiBillboard/libMultiBillboard.dylib $$LIBS_APP_DIR
     first.depends = $(first) copydeploymentfolders copydata
     export(first.depends)
     export(copydata.commands)
