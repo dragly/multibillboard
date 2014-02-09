@@ -14,7 +14,7 @@
 
 int main(int argc, char *argv[])
 {
-    qmlRegisterType<ExampleDataSource>("MultiBillboardDemo", 1, 0, "ExampleDataSource");
+    qmlRegisterType<ExampleDataSource>("CompPhys.MultiBillboardDemo", 1, 0, "ExampleDataSource");
     QGuiApplication app(argc, argv);
 
     QSurfaceFormat f;

@@ -41,8 +41,8 @@
 import QtQuick 2.0
 import Qt3D 2.0
 import Qt3D.Shapes 2.0
-import MultiBillboard 1.0
-import MultiBillboardDemo 1.0
+import CompPhys.MultiBillboard 1.0
+import CompPhys.MultiBillboardDemo 1.0
 
 Viewport  {
     id: rootViewport

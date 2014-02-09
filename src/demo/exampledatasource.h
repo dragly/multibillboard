@@ -1,6 +1,6 @@
 #ifndef EXAMPLEDATASOURCE_H
 #define EXAMPLEDATASOURCE_H
-#include <multibillboard/datasource.h>
+#include <compphys/multibillboard/datasource.h>
 
 class ExampleDataSource : public DataSource
 {

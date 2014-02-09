@@ -23,7 +23,8 @@ HEADERS += exampledatasource.h
 TARGET = multibillboard_demo
 
 # Installation path
-# target.path =
+target.path = $$[QT_INSTALL_EXAMPLES]/compphys
+INSTALLS = target
 
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
@@ -32,9 +33,9 @@ qtcAddDeployment()
 OTHER_FILES += README.md
 
 QML_IMPORT_PATH = $$OUT_PWD/../libs/
-INCLUDEPATH = $$OUT_PWD/../libs/MultiBillboard/include
+INCLUDEPATH = $$OUT_PWD/../libs/include
 
-LIBS += -L$$OUT_PWD/../libs/MultiBillboard -lMultiBillboard
+LIBS += -L$$OUT_PWD/../libs -lMultiBillboard
 macx {
     LIBS_TARGET_DIR = $$OUT_PWD/$${TARGET}.app/Contents/Resources/
     LIBS_APP_DIR = $$OUT_PWD/$${TARGET}.app/Contents/MacOS/

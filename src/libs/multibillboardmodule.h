@@ -12,9 +12,10 @@ class MultiBillboardModule : public QQmlExtensionPlugin
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface/1.0")
 public:
     virtual void registerTypes(const char *uri) {
-        Q_ASSERT(QLatin1String(uri) == QLatin1String("MultiBillboard"));
-        qmlRegisterType<MultiBillboard>(uri, 1, 0, "MultiBillboard");
-        qmlRegisterType<DataSource>("MultiBillboard", 1, 0, "DataSource");
+        Q_UNUSED(uri)
+        Q_ASSERT(QLatin1String(uri) == QLatin1String("CompPhys.MultiBillboard"));
+        qmlRegisterType<MultiBillboard>("CompPhys.MultiBillboard", 1, 0, "MultiBillboard");
+        qmlRegisterType<DataSource>("CompPhys.MultiBillboard", 1, 0, "DataSource");
     }
     void initializeEngine(QQmlEngine*, const char*) {
 
