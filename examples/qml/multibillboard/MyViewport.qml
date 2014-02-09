@@ -74,8 +74,8 @@ Viewport  {
     MultiBillboard {
         id: multiSphere
         dataSource: exampleDataSource
-//        cullFaces: Item3D.CullBackFaces
-//        sortPoints: Item3D.BackToFront
+////        cullFaces: Item3D.CullBackFaces
+////        sortPoints: Item3D.BackToFront
 
         effect: Effect {
             texture: "sphere2-green.png"

@@ -16,7 +16,7 @@ class MultiBillboard : public QQuickItem3D
 
 public:
     explicit MultiBillboard(QQuickItem *parent = 0);
-    ~MultiBillboard();
+    virtual ~MultiBillboard();
 
     double fps() const
     {

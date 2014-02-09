@@ -175,4 +175,5 @@ void MultiBillboard::drawCPUBillboards(QGLPainter *painter) {
 
 MultiBillboard::~MultiBillboard()
 {
+    delete m_effect;
 }
