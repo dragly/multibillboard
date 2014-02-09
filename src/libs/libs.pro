@@ -39,4 +39,5 @@ libinstall.path = /home/svenni/tmp
 libinstall.files += $$DESTDIR/lib$$TARGET.so
 INSTALLS += libinstall
 
-OTHER_FILES += README.md
+OTHER_FILES += README.md \
+    qmldir
