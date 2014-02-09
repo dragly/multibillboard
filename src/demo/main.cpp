@@ -21,7 +21,12 @@ int main(int argc, char *argv[])
     f.setMajorVersion(3);
     f.setMinorVersion(3);
     QtQuick2ApplicationViewer view;
-    view.addImportPath("../libs");
+
+#ifdef Q_OS_MACX
+    viewer.addImportPath(".");
+#else
+    viewer.addImportPath("../libs");
+#endif
     view.setFormat(f);
 #ifdef Q_OS_ANDROID
     view.setMainQmlFile(QUrl(QLatin1String("assets:/")+QStringLiteral("qml/multibillboard/main.qml")));
