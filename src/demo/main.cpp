@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
     QtQuick2ApplicationViewer view;
 
 #ifdef Q_OS_MACX
-    viewer.addImportPath(".");
+    view.addImportPath(".");
 #else
-    viewer.addImportPath("../libs");
+    view.addImportPath("../libs");
 #endif
     view.setFormat(f);
 #ifdef Q_OS_ANDROID
