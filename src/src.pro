@@ -2,9 +2,9 @@ TEMPLATE=lib
 TARGET=MultiBillboard
 QT += qml quick 3dquick
 
-CONFIG += plugin
+CONFIG += qt plugin
 
-TARGET = $$qtLibraryTarget($$TARGET)
+#TARGET = $$qtLibraryTarget($$TARGET)
 uri = CompPhys.MultiBillboard
 
 HEADERS_OUT_DIR = $$OUT_PWD/include/compphys/multibillboard

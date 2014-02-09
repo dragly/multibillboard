@@ -29,10 +29,15 @@ qtcAddDeployment()
 
 OTHER_FILES += README.md
 
+# The following is only necessary for the example deployment
+# I.e. there is no need to do the same for other apps
+
 QML_IMPORT_PATH = $$OUT_PWD/../src/
-INCLUDEPATH = $$OUT_PWD/../src/include/
+INCLUDEPATH += $$OUT_PWD/../src/include/
+DEPENDPATH += -L$$OUT_PWD/../src/
 
 LIBS += -L$$OUT_PWD/../src/ -lMultiBillboard
+
 unix {
     LIB_FILES += $$OUT_PWD/../src/qmldir
     !macx {
@@ -45,6 +50,8 @@ unix {
     }
 }
 copydata.commands = $$QMAKE_MKDIR $$LIB_TARGET_DIR && $(COPY_DIR) $$LIB_FILES $$LIB_TARGET_DIR
+
+# Fix the path to the dylib to avoid extra copying
 macx {
     copydata.commands += && install_name_tool -change libMultiBillboard.dylib @executable_path/../Resources/CompPhys/MultiBillboard/libMultiBillboard.dylib $$OUT_PWD/$${TARGET}.app/Contents/MacOS/$${TARGET}
 }
