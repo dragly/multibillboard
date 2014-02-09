@@ -43,8 +43,16 @@ import Qt3D 2.0
 import Qt3D.Shapes 2.0
 import Dragly 1.0
 
+Rectangle {
 Viewport  {
     id: rootViewport
+    anchors {
+        left: parent.left
+        right: parent.right
+        top: parent.top
+        bottom: parent.bottom
+        margins: 20
+    }
 
     fillColor: "black"
     blending: true
@@ -77,7 +85,7 @@ Viewport  {
 //        sortPoints: Item3D.BackToFront
 
         effect: Effect {
-            texture: "particle.png"
+            texture: "sphere2-green.png"
             blending: true
             useLighting: true
         }
@@ -93,7 +101,8 @@ Viewport  {
         repeat: true
         interval: 1
         onTriggered: {
-            camera.tiltPanRollCenter(0,0.01,0)
+            myCamera.tiltPanRollCenter(0,0.01,0)
         }
     }
+}
 }

@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     view.setFormat(f);
     view.setResizeMode(QQuickView::SizeRootObjectToView);
 #ifdef Q_OS_ANDROID
-    view.setSource(QUrl(QLatin1String("assets:/")+QStringLiteral("qml/multibillboard/main.qml")));
+    view.setMainQmlFile(QUrl(QLatin1String("assets:/")+QStringLiteral("qml/multibillboard/main.qml")));
 #else
     view.setMainQmlFile("qml/multibillboard/main.qml");
 #endif
