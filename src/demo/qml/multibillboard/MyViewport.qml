@@ -41,18 +41,11 @@
 import QtQuick 2.0
 import Qt3D 2.0
 import Qt3D.Shapes 2.0
-import Dragly 1.0
+import MultiBillboard 1.0
+import MultiBillboardDemo 1.0
 
-Rectangle {
 Viewport  {
     id: rootViewport
-    anchors {
-        left: parent.left
-        right: parent.right
-        top: parent.top
-        bottom: parent.bottom
-        margins: 20
-    }
 
     fillColor: "black"
     blending: true
@@ -104,5 +97,4 @@ Viewport  {
             myCamera.tiltPanRollCenter(0,0.01,0)
         }
     }
-}
 }
