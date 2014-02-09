@@ -22,11 +22,10 @@ int main(int argc, char *argv[])
     f.setMinorVersion(3);
     QtQuick2ApplicationViewer view;
 
-#ifdef Q_OS_MACX
+    // Specific to demo, not necessary after install
     view.addImportPath(".");
-#else
-    view.addImportPath("../libs");
-#endif
+    // end specific to demo
+
     view.setFormat(f);
 #ifdef Q_OS_ANDROID
     view.setMainQmlFile(QUrl(QLatin1String("assets:/")+QStringLiteral("qml/multibillboard/main.qml")));

@@ -1,3 +1,3 @@
-TEMPLATE=subdirs
+TEMPLATE = subdirs
+SUBDIRS += src examples
 CONFIG += ordered
-SUBDIRS += src

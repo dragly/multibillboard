@@ -1,3 +1,2 @@
 module CompPhys.MultiBillboard
 plugin MultiBillboard
-typeinfo plugins.qmltypes

@@ -12,9 +12,9 @@ using namespace std;
 
 MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
-    m_dataSource(0),
     firstPaint(true),
-    useGeometryShader(false)
+    useGeometryShader(false),
+    m_dataSource(0)
 {
     m_effect = new CustomEffect();
 }
@@ -37,29 +37,32 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
         firstPaint = false;
     }
 
-//    if(m_sortPoints == BackToFront) {
-//        QMultiMap<double, QVector3D> sortedPoints;
-//        for(int i = 0; i < m_points.count(); i++) {
-//            const QVector3D &center = m_points.at(i);
-//            const QVector4D &depthVector = painter->modelViewMatrix() * center;
-//            double depth = depthVector.z();
-//            sortedPoints.insert(depth, center);
-//        }
-//        m_points.clear();
-//        QMapIterator<double, QVector3D> i(sortedPoints);
-//        while(i.hasNext()) {
-//            m_points.push_back(i.next().value());
-//        }
-//        sortedPoints.clear();
-//    }
+    //    if(m_sortPoints == BackToFront) {
+    //        QMultiMap<double, QVector3D> sortedPoints;
+    //        for(int i = 0; i < m_points.count(); i++) {
+    //            const QVector3D &center = m_points.at(i);
+    //            const QVector4D &depthVector = painter->modelViewMatrix() * center;
+    //            double depth = depthVector.z();
+    //            sortedPoints.insert(depth, center);
+    //        }
+    //        m_points.clear();
+    //        QMapIterator<double, QVector3D> i(sortedPoints);
+    //        while(i.hasNext()) {
+    //            m_points.push_back(i.next().value());
+    //        }
+    //        sortedPoints.clear();
+    //    }
 
     double currentFps = 1000.0 / fpsTimer.restart();
     m_fps = 0.9*m_fps + 0.1 * currentFps;
     emit fpsChanged(m_fps);
-    if(useGeometryShader) {
-        drawGeometryShaderBillboards(painter);
-    } else {
-        drawCPUBillboards(painter);
+
+    if(m_dataSource) {
+        if(useGeometryShader) {
+            drawGeometryShaderBillboards(painter);
+        } else {
+            drawCPUBillboards(painter);
+        }
     }
 }
 

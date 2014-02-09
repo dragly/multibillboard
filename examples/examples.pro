@@ -6,9 +6,6 @@ folder_01.source = qml/multibillboard
 folder_01.target = qml
 DEPLOYMENTFOLDERS = folder_01
 
-# Additional import path used to resolve QML modules in Creator's code model
-QML_IMPORT_PATH =
-
 # If your application uses the Qt Mobility libraries, uncomment the following
 # lines and add the respective components to the MOBILITY variable.
 # CONFIG += mobility
@@ -32,17 +29,23 @@ qtcAddDeployment()
 
 OTHER_FILES += README.md
 
-QML_IMPORT_PATH = $$OUT_PWD/../libs/
-INCLUDEPATH = $$OUT_PWD/../libs/include
+QML_IMPORT_PATH = $$OUT_PWD/../src/
+INCLUDEPATH = $$OUT_PWD/../src/include/
 
-LIBS += -L$$OUT_PWD/../libs -lMultiBillboard
-macx {
-    LIBS_TARGET_DIR = $$OUT_PWD/$${TARGET}.app/Contents/Resources/
-    LIBS_APP_DIR = $$OUT_PWD/$${TARGET}.app/Contents/MacOS/
-
-    copydata.commands = $(COPY_DIR) $$PWD/qml $$OUT_PWD/../libs/CompPhys/MultiBillboard $$LIBS_TARGET_DIR && $(COPY_DIR) $$OUT_PWD/../libs/libMultiBillboard.dylib $$LIBS_APP_DIR
-    first.depends = $(first) copydeploymentfolders copydata
-    export(first.depends)
-    export(copydata.commands)
-    QMAKE_EXTRA_TARGETS += first copydata
+LIBS += -L$$OUT_PWD/../src/ -lMultiBillboard
+unix {
+    LIB_FILES += $$OUT_PWD/../src/qmldir
+    !macx {
+        LIB_FILES += $$OUT_PWD/../src/libMultiBillboard.so
+        LIB_TARGET_DIR = $$OUT_PWD/CompPhys/MultiBillboard
+    }
+    macx {
+        LIB_FILES += $$OUT_PWD/../src/libMultiBillboard.dylib
+        LIB_TARGET_DIR = $$OUT_PWD/$${TARGET}.app/Contents/Resources/CompPhys/MultiBillboard
+    }
 }
+copydata.commands = $$QMAKE_MKDIR $$LIB_TARGET_DIR && $(COPY_DIR) $$LIB_FILES $$LIB_TARGET_DIR
+first.depends = $(first) copydeploymentfolders copydata
+export(first.depends)
+export(copydata.commands)
+QMAKE_EXTRA_TARGETS += first copydeploymentfolders copydata
