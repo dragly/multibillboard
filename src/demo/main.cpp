@@ -9,8 +9,6 @@
 
 #include <QtCore/qdebug.h>
 #include <QScreen>
-#include <X11/Xlib.h>
-#include <X11/X.h>
 
 #include <qtquick2applicationviewer/qtquick2applicationviewer.h>
 
