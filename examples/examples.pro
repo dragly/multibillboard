@@ -46,7 +46,7 @@ unix {
 }
 copydata.commands = $$QMAKE_MKDIR $$LIB_TARGET_DIR && $(COPY_DIR) $$LIB_FILES $$LIB_TARGET_DIR
 macx {
-    copydata.commands += && $(COPY_DIR) $$LIB_TARGET_DIR/libMultiBillboard.dylib $$OUT_PWD/$${TARGET}.app/Contents/MacOS/
+    copydata.commands += && install_name_tool -change libMultiBillboard.dylib @executable_path/../Resources/CompPhys/MultiBillboard/libMultiBillboard.dylib $$OUT_PWD/$${TARGET}.app/Contents/MacOS/$${TARGET}
 }
 first.depends = $(first) copydeploymentfolders copydata
 export(first.depends)
