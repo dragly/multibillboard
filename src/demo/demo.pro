@@ -35,3 +35,12 @@ QML_IMPORT_PATH = $$OUT_PWD/../libs/
 INCLUDEPATH = $$OUT_PWD/../libs/MultiBillboard/include
 
 LIBS += -L$$OUT_PWD/../libs/MultiBillboard -lMultiBillboard
+macx {
+    LIBS_TARGET_DIR = $$OUT_PWD/$${TARGET}.app/Contents/Resources/
+
+    copydata.commands = $(COPY_DIR) $$PWD/qml $$OUT_PWD/../libs/MultiBillboard $$LIBS_TARGET_DIR
+    first.depends = $(first) copydeploymentfolders copydata
+    export(first.depends)
+    export(copydata.commands)
+    QMAKE_EXTRA_TARGETS += first copydata
+}

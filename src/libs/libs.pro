@@ -36,7 +36,12 @@ HEADERS += \
 message($$[QT_INSTALL_QML])
 
 libinstall.path = /home/svenni/tmp
-libinstall.files += $$DESTDIR/lib$$TARGET.so
+!macx {
+    libinstall.files += $$DESTDIR/lib$$TARGET.so
+}
+macx {
+    libinstall.files += $$DESTDIR/lib$$TARGET.dylib
+}
 INSTALLS += libinstall
 
 OTHER_FILES += README.md \
