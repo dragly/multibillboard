@@ -21,7 +21,7 @@ TARGET = multibillboard_demo
 
 # Installation path
 target.path = $$[QT_INSTALL_EXAMPLES]/compphys
-INSTALLS = target
+#INSTALLS += target
 
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
@@ -51,4 +51,4 @@ macx {
 first.depends = $(first) copydeploymentfolders copydata
 export(first.depends)
 export(copydata.commands)
-QMAKE_EXTRA_TARGETS += first copydeploymentfolders copydata
+QMAKE_EXTRA_TARGETS += first copydata
