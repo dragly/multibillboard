@@ -38,9 +38,9 @@ unix {
     target.path = $$installPath
     solibs.path = $$[QT_INSTALL_LIBS]
     macx {
-        solibs.files = lib$${TARGET}.dylib
+        solibs.files = $$OUT_PWD/lib$${TARGET}.dylib
     } else {
-        solibs.files = lib$${TARGET}.so
+        solibs.files = $$OUT_PWD/lib$${TARGET}.so
     }
     INSTALLS += target qmldir solibs
 }
