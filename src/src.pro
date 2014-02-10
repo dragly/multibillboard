@@ -36,7 +36,13 @@ unix {
     installPath = $$[QT_INSTALL_QML]/$$replace(uri, \\., /)
     qmldir.path = $$installPath
     target.path = $$installPath
-    INSTALLS += target qmldir
+    solibs.path = $$[QT_INSTALL_LIBS]
+    macx {
+        solibs.files = lib$${TARGET}.dylib
+    } else {
+        solibs.files = lib$${TARGET}.so
+    }
+    INSTALLS += target qmldir solibs
 }
 
 # Copy the necessary headers as well

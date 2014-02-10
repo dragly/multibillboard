@@ -23,7 +23,7 @@ public:
     virtual const QArray<QColor4ub> &getColors() { cerr << "Returning from abstract DataSource. This should not happen." << endl; return m_tmp_colors; }
     virtual const QArray<QSizeF > &getSizes() { cerr << "Returning from abstract DataSource. This should not happen." << endl; return m_tmp_sizes; }
 
-    DataSource();
+    DataSource(QObject *parent = 0);
 };
 
 #endif
