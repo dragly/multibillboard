@@ -9,14 +9,14 @@ class ExampleDataSource : public DataSource
 private:
     QArray<QVector3D> m_positions;
     QArray<QColor4ub> m_colors;
-    QArray<QSizeF > m_sizes;
+    QArray<QVector2D > m_sizes;
     int m_numPointsPerDimension;
     void generateData();
 public:
     ExampleDataSource();
     virtual const QArray<QVector3D> &getPositions();
     virtual const QArray<QColor4ub> &getColors();
-    virtual const QArray<QSizeF > &getSizes();
+    virtual const QArray<QVector2D > &getSizes();
 
     int numPointsPerDimension() const
     {
