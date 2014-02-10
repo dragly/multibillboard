@@ -139,7 +139,7 @@ CustomEffect::CustomEffect() :
             "    vec4 color = litColorOut * texture2D(qt_Texture0, texCoord.st);\n"
             "    color = color * billboardColorOut;\n"
             "    MyFragColor = clamp(color + litSecondaryColorOut, 0.0, 1.0);\n"
-            "if(MyFragColor.a < 0.5) {\n"
+            "if(MyFragColor.a < 0.9999) {\n"
             "    discard;\n"
             "}\n"
             "}\n"
