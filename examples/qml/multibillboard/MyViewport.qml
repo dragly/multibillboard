@@ -68,7 +68,7 @@ Viewport  {
 
     ExampleDataSource {
         id: exampleDataSource
-        numPointsPerDimension: 70
+        numPointsPerDimension: 30
     }
 
     MultiBillboard {
@@ -78,7 +78,7 @@ Viewport  {
 ////        sortPoints: Item3D.BackToFront
 
         effect: Effect {
-            texture: "sphere2-green.png"
+            texture: "out.png"
             blending: true
             useLighting: true
         }

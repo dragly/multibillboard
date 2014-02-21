@@ -14,7 +14,8 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
     firstPaint(true),
     useGeometryShader(false),
-    m_dataSource(0)
+    m_dataSource(0),
+    m_firstVertexBuild(true)
 {
     m_effect = new CustomEffect();
 }
@@ -67,14 +68,9 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
 }
 
 void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
-    const QArray<QVector3D> &positions = m_dataSource->getPositions();
-    const QArray<QColor4ub> &colors = m_dataSource->getColors();
-    const QArray<QVector2D> &sizes = m_dataSource->getSizes();
-
-    QGLVertexBundle vertexBundle;
-    vertexBundle.addAttribute(QGL::Position, positions);
-    vertexBundle.addAttribute(QGL::Color, colors);
-    vertexBundle.addAttribute(QGL::CustomVertex0, sizes);
+    if(!m_dataSource->vertexBundle()) {
+        return;
+    }
     // TODO: Add sizes as an attribute so geometry shader knows how large the billboards should be
 
     painter->clearAttributes();
@@ -98,8 +94,9 @@ void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
     painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
 
     // Set the rest of the vertex bundle (basically only positions)
-    painter->setVertexBundle(vertexBundle);
-    painter->draw(QGL::DrawingMode(QGL::Points), vertexBundle.vertexCount());
+    QGLVertexBundle* vertexBundle = m_dataSource->vertexBundle();
+    painter->setVertexBundle(*vertexBundle);
+    painter->draw(QGL::DrawingMode(QGL::Points), vertexBundle->vertexCount());
 }
 
 void MultiBillboard::drawCPUBillboards(QGLPainter *painter) {

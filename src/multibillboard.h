@@ -63,6 +63,7 @@ private:
     QArray<QVector3D> normals;
     QArray<QColor4ub> colorArray;
     QArray<QVector2D> texCoords;
+    bool m_firstVertexBuild;
 
     CustomEffect* m_effect;
 
