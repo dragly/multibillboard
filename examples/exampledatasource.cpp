@@ -11,6 +11,11 @@ ExampleDataSource::ExampleDataSource()
 
 }
 
+QGLVertexBundle *ExampleDataSource::vertexBundle()
+{
+    return &m_vertexBundle;
+}
+
 void ExampleDataSource::generateData() {
     m_colors.clear();
     m_sizes.clear();
@@ -19,7 +24,8 @@ void ExampleDataSource::generateData() {
     double spacing = 1;
     double frequency = 0.1;
     QColor4ub color(255,255,255,255);
-    QSizeF size(1.0,1.0);
+    QVector2D size(0.2,0.2);
+//    QVector2D size(1.0,1.0);
 
     for(int i = 0; i < m_numPointsPerDimension; i++) {
         for(int j = 0; j < m_numPointsPerDimension; j++) {
@@ -34,7 +40,12 @@ void ExampleDataSource::generateData() {
             }
         }
     }
+
+    m_vertexBundle.addAttribute(QGL::Position, m_positions);
+    m_vertexBundle.addAttribute(QGL::Color, m_colors);
+    m_vertexBundle.addAttribute(QGL::CustomVertex0, m_sizes);
     cout << "Showing a total of " << m_positions.size() << " points." << endl;
+
 }
 
 const QArray<QVector3D> &ExampleDataSource::getPositions() {
@@ -45,6 +56,6 @@ const QArray<QColor4ub> &ExampleDataSource::getColors() {
     return m_colors;
 }
 
-const QArray<QSizeF> &ExampleDataSource::getSizes() {
+const QArray<QVector2D> &ExampleDataSource::getSizes() {
     return m_sizes;
 }

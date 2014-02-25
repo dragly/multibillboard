@@ -14,7 +14,8 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
     firstPaint(true),
     useGeometryShader(false),
-    m_dataSource(0)
+    m_dataSource(0),
+    m_firstVertexBuild(true)
 {
     m_effect = new CustomEffect();
 }
@@ -67,13 +68,9 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
 }
 
 void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
-    const QArray<QVector3D> &positions = m_dataSource->getPositions();
-    const QArray<QColor4ub> &colors = m_dataSource->getColors();
-    const QArray<QSizeF > &sizes = m_dataSource->getSizes();
-
-    QGLVertexBundle vertexBundle;
-    vertexBundle.addAttribute(QGL::Position, positions);
-    vertexBundle.addAttribute(QGL::Color, colors);
+    if(!m_dataSource->vertexBundle()) {
+        return;
+    }
     // TODO: Add sizes as an attribute so geometry shader knows how large the billboards should be
 
     painter->clearAttributes();
@@ -97,8 +94,9 @@ void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
     painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
 
     // Set the rest of the vertex bundle (basically only positions)
-    painter->setVertexBundle(vertexBundle);
-    painter->draw(QGL::DrawingMode(QGL::Points), vertexBundle.vertexCount());
+    QGLVertexBundle* vertexBundle = m_dataSource->vertexBundle();
+    painter->setVertexBundle(*vertexBundle);
+    painter->draw(QGL::DrawingMode(QGL::Points), vertexBundle->vertexCount());
 }
 
 void MultiBillboard::drawCPUBillboards(QGLPainter *painter) {
@@ -112,7 +110,7 @@ void MultiBillboard::drawCPUBillboards(QGLPainter *painter) {
 
     const QArray<QVector3D> &positions = m_dataSource->getPositions();
     const QArray<QColor4ub> &colors = m_dataSource->getColors();
-    const QArray<QSizeF > &sizes = m_dataSource->getSizes();
+    const QArray<QVector2D > &sizes = m_dataSource->getSizes();
 
     vertices.reserve(4*positions.count());
     texCoords.reserve(4*positions.count());
@@ -148,10 +146,10 @@ void MultiBillboard::drawCPUBillboards(QGLPainter *painter) {
 
     for(int i = 0; i <positions.count(); i++) {
         const QVector3D &center = positions.at(i);
-        a = center + sizes.at(i).width()*aOffset_x + sizes.at(i).height()*aOffset_y;
-        b = center + sizes.at(i).width()*bOffset_x + sizes.at(i).height()*bOffset_y;
-        c = center + sizes.at(i).width()*cOffset_x + sizes.at(i).height()*cOffset_y;
-        d = center + sizes.at(i).width()*dOffset_x + sizes.at(i).height()*dOffset_y;
+        a = center + sizes.at(i).y()*aOffset_x + sizes.at(i).x()*aOffset_y;
+        b = center + sizes.at(i).y()*bOffset_x + sizes.at(i).x()*bOffset_y;
+        c = center + sizes.at(i).y()*cOffset_x + sizes.at(i).x()*cOffset_y;
+        d = center + sizes.at(i).y()*dOffset_x + sizes.at(i).x()*dOffset_y;
         vertices.append(a, b, c, d);
         colorArray.append(colors.at(i), colors.at(i), colors.at(i), colors.at(i));
         texCoords.append(ta, tb, tc, td);

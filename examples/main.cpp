@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     else if (QGuiApplication::arguments().contains(QLatin1String("-fullscreen")))
         view.showFullScreen();
     else
-        view.show();
+        view.showFullScreen();
 
     return app.exec();
 }

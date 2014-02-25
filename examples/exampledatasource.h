@@ -1,6 +1,7 @@
 #ifndef EXAMPLEDATASOURCE_H
 #define EXAMPLEDATASOURCE_H
 #include <compphys/multibillboard/datasource.h>
+#include <QGLVertexBundle>
 
 class ExampleDataSource : public DataSource
 {
@@ -9,14 +10,17 @@ class ExampleDataSource : public DataSource
 private:
     QArray<QVector3D> m_positions;
     QArray<QColor4ub> m_colors;
-    QArray<QSizeF > m_sizes;
+    QArray<QVector2D > m_sizes;
     int m_numPointsPerDimension;
+
+    QGLVertexBundle m_vertexBundle;
     void generateData();
 public:
     ExampleDataSource();
     virtual const QArray<QVector3D> &getPositions();
     virtual const QArray<QColor4ub> &getColors();
-    virtual const QArray<QSizeF > &getSizes();
+    virtual const QArray<QVector2D > &getSizes();
+    virtual QGLVertexBundle* vertexBundle();
 
     int numPointsPerDimension() const
     {
