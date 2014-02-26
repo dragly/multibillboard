@@ -3,9 +3,18 @@
 #include <QOpenGLShaderProgram>
 
 CustomEffect::CustomEffect() :
-    QGLShaderProgramEffect()
+    QGLShaderProgramEffect(),
+    m_useGeometryShader(false)
 {
-//    setVertexShaderFromFile("qml/multibillboard/vertexlighting.glsl");
+}
+
+void CustomEffect::setUseGeometryShader(bool value)
+{
+    m_useGeometryShader = value;
+}
+
+bool CustomEffect::beforeLink() {
+
     QByteArray vertexCode = "#version 330\n"
             "in vec4 qt_Vertex;\n"
             "uniform mat4 qt_ModelViewProjectionMatrix;\n"
@@ -15,6 +24,7 @@ CustomEffect::CustomEffect() :
             "in vec4 qt_Color;\n"
             "out vec4 billboardColor;\n"
             "in vec2 qt_MultiTexCoord0;\n"
+            "out vec2 texCoord;\n"
             "in vec3 qt_Normal;\n"
             "uniform mat4 qt_ModelViewMatrix;\n"
             "uniform mat3 qt_NormalMatrix;\n"
@@ -49,6 +59,7 @@ CustomEffect::CustomEffect() :
             "    billboardColor = qt_Color;\n"
             "    size = qt_Custom0;\n"
             "    gl_Position = qt_ModelViewProjectionMatrix * qt_Vertex;\n"
+            "    texCoord = qt_MultiTexCoord0;"
             "\n"
             "    // Calculate the vertex and normal to use for lighting calculations.\n"
             "    vec4 vertex = qt_ModelViewMatrix * qt_Vertex;\n"
@@ -125,73 +136,81 @@ CustomEffect::CustomEffect() :
             "    litSecondaryColor = vec4(clamp(scolor.rgb, 0.0, 1.0), 0.0);\n"
             "}\n"
             "\n";
-    setVertexShader(vertexCode);
-//    setFragmentShaderFromFile("qml/multibillboard/fragmentlighting.glsl");
+    program()->addShaderFromSourceCode
+        (QOpenGLShader::Vertex, vertexCode);
+//    setVertexShader(vertexCode);
+    QByteArray appendix;
+    if(m_useGeometryShader) {
+        appendix = "Out";
+    }
+
     QByteArray fragmentCode = "#version 330\n"
             "out vec4 MyFragColor;\n"
-            "in vec4 billboardColorOut;\n"
+            "in vec4 billboardColor" + appendix + ";\n"
             "in vec2 texCoord;\n"
-            "in vec4 litColorOut;\n"
-            "in vec4 litSecondaryColorOut;\n"
+            "in vec4 litColor" + appendix + ";\n"
+            "in vec4 litSecondaryColor" + appendix + ";\n"
             "uniform sampler2D qt_Texture0;\n"
             "\n"
             "void main(void) {\n"
-            "    vec4 color = litColorOut * texture2D(qt_Texture0, texCoord.st);\n"
-            "    color = color * billboardColorOut;\n"
-            "    MyFragColor = clamp(color + litSecondaryColorOut, 0.0, 1.0);\n"
-            "if(MyFragColor.a < 0.9999) {\n"
-            "    discard;\n"
-            "}\n"
+            "    vec4 color = litColor" + appendix + " * texture2D(qt_Texture0, texCoord.st);\n"
+            "    color = color * billboardColor" + appendix + ";\n"
+            "    MyFragColor = clamp(color + litSecondaryColor" + appendix + ", 0.0, 1.0);\n"
+            "    if(MyFragColor.a < 0.9999) {\n"
+            "        discard;\n"
+            "    }\n"
             "}\n"
             "\n";
-    setFragmentShader(fragmentCode);
-}
-
-bool CustomEffect::beforeLink() {
-    QByteArray geometryCode = "#version 330\n"
-            "layout( points ) in;\n"
-            "layout( triangle_strip, max_vertices = 4 ) out;\n"
-            "uniform mat4 qt_ProjectionMatrix;\n"
-            "in vec2 size[1];\n"
-            "in vec4 litColor[1];\n"
-            "in vec4 litSecondaryColor[1];\n"
-            "in vec4 billboardColor[1];\n"
-            "out vec4 billboardColorOut;\n"
-            "out vec4 litColorOut;\n"
-            "out vec4 litSecondaryColorOut;\n"
-            "out vec2 texCoord;\n"
-            "\n"
-            "void main(void) {\n"
-            "    float scale = size[0].x;\n"
-            "    vec4 pos = gl_in[0].gl_Position;\n"
-            "    gl_Position = pos + qt_ProjectionMatrix*vec4(-scale, -scale, 0.0, 0.0);\n"
-            "    billboardColorOut = billboardColor[0];\n"
-            "    litColorOut = litColor[0];\n"
-            "    litSecondaryColorOut = litSecondaryColor[0];\n"
-            "    texCoord = vec2(0.0, 0.0);\n"
-            "    EmitVertex();\n"
-            "    gl_Position = pos + qt_ProjectionMatrix*vec4(-scale, scale, 0.0, 0.0);\n"
-            "    litColorOut = litColor[0];\n"
-            "    litSecondaryColorOut = litSecondaryColor[0];\n"
-            "    texCoord = vec2(0.0, 1.0);\n"
-            "    EmitVertex();\n"
-            "    gl_Position = pos + qt_ProjectionMatrix*vec4(scale, -scale, 0.0, 0.0);\n"
-            "    litColorOut = litColor[0];\n"
-            "    litSecondaryColorOut = litSecondaryColor[0];\n"
-            "    texCoord = vec2(1.0, 0.0);\n"
-            "    EmitVertex();\n"
-            "    gl_Position = pos + qt_ProjectionMatrix*vec4(scale, scale, 0.0, 0.0);\n"
-            "    litColorOut = litColor[0];\n"
-            "    litSecondaryColorOut = litSecondaryColor[0];\n"
-            "    texCoord = vec2(1.0, 1.0);\n"
-            "    EmitVertex();\n"
-            "    EndPrimitive();\n"
-            "};\n"
-            "\n";
-    if(!program()->addShaderFromSourceCode(QOpenGLShader::Geometry,
-                                           geometryCode)) {
-        qCritical() << "Could not compile geometry shader! Log: \n"
-                    << program()->log();
+    program()->addShaderFromSourceCode
+        (QOpenGLShader::Fragment, fragmentCode);
+//    qDebug() << fragmentCode;
+//    setFragmentShader(fragmentCode);
+    if(m_useGeometryShader) {
+        QByteArray geometryCode = "#version 330\n"
+                "layout( points ) in;\n"
+                "layout( triangle_strip, max_vertices = 4 ) out;\n"
+                "uniform mat4 qt_ProjectionMatrix;\n"
+                "in vec2 size[1];\n"
+                "in vec4 litColor[1];\n"
+                "in vec4 litSecondaryColor[1];\n"
+                "in vec4 billboardColor[1];\n"
+                "out vec4 billboardColorOut;\n"
+                "out vec4 litColorOut;\n"
+                "out vec4 litSecondaryColorOut;\n"
+                "out vec2 texCoord;\n"
+                "\n"
+                "void main(void) {\n"
+                "    float scale = size[0].x;\n"
+                "    vec4 pos = gl_in[0].gl_Position;\n"
+                "    gl_Position = pos + qt_ProjectionMatrix*vec4(-scale, -scale, 0.0, 0.0);\n"
+                "    billboardColorOut = billboardColor[0];\n"
+                "    litColorOut = litColor[0];\n"
+                "    litSecondaryColorOut = litSecondaryColor[0];\n"
+                "    texCoord = vec2(0.0, 0.0);\n"
+                "    EmitVertex();\n"
+                "    gl_Position = pos + qt_ProjectionMatrix*vec4(-scale, scale, 0.0, 0.0);\n"
+                "    litColorOut = litColor[0];\n"
+                "    litSecondaryColorOut = litSecondaryColor[0];\n"
+                "    texCoord = vec2(0.0, 1.0);\n"
+                "    EmitVertex();\n"
+                "    gl_Position = pos + qt_ProjectionMatrix*vec4(scale, -scale, 0.0, 0.0);\n"
+                "    litColorOut = litColor[0];\n"
+                "    litSecondaryColorOut = litSecondaryColor[0];\n"
+                "    texCoord = vec2(1.0, 0.0);\n"
+                "    EmitVertex();\n"
+                "    gl_Position = pos + qt_ProjectionMatrix*vec4(scale, scale, 0.0, 0.0);\n"
+                "    litColorOut = litColor[0];\n"
+                "    litSecondaryColorOut = litSecondaryColor[0];\n"
+                "    texCoord = vec2(1.0, 1.0);\n"
+                "    EmitVertex();\n"
+                "    EndPrimitive();\n"
+                "};\n"
+                "\n";
+        if(!program()->addShaderFromSourceCode(QOpenGLShader::Geometry,
+                                               geometryCode)) {
+            qCritical() << "Could not compile geometry shader! Log: \n"
+                        << program()->log();
+        }
     }
     return true;
 }

@@ -77,11 +77,7 @@ Viewport  {
 ////        cullFaces: Item3D.CullBackFaces
 ////        sortPoints: Item3D.BackToFront
 
-        effect: Effect {
-            texture: "out.png"
-            blending: true
-            useLighting: true
-        }
+        texture: "out.png"
     }
 
     Text {

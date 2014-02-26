@@ -8,9 +8,13 @@ class CustomEffect : public QGLShaderProgramEffect
 public:
     CustomEffect();
 
-    // QGLShaderProgramEffect interface
+    void setUseGeometryShader(bool value);
 protected:
     bool beforeLink();
+
+private:
+    bool m_firstPaint;
+    bool m_useGeometryShader;
 };
 
 #endif // CUSTOMEFFECT_H

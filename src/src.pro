@@ -37,11 +37,12 @@ unix {
     qmldir.path = $$installPath
     target.path = $$installPath
     solibs.path = $$[QT_INSTALL_LIBS]
-    macx {
+    mac {
         solibs.files = $$OUT_PWD/lib$${TARGET}.dylib
     } else {
         solibs.files = $$OUT_PWD/lib$${TARGET}.so
     }
+    system(mkdir -p $$OUT_PWD && touch $$solibs.files) # to ensure the file exists when qmake looks for it
     INSTALLS += target qmldir solibs
 }
 

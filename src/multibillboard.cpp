@@ -7,64 +7,98 @@
 #include <iostream>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLFunctions_4_0_Core>
+#include <QQuickWindow>
 
 using namespace std;
 
 MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
     firstPaint(true),
-    useGeometryShader(false),
+    m_useGeometryShader(false),
     m_dataSource(0),
-    m_firstVertexBuild(true)
+    m_firstVertexBuild(true),
+    bConnectedToOpenGLContextSignal(false),
+    m_texture2D(0)
 {
     m_effect = new CustomEffect();
 }
 
-void MultiBillboard::drawItem(QGLPainter *painter) {
-
+bool MultiBillboard::hasGeometryShaderSupport(QGLPainter *painter) {
     if(firstPaint) {
-        if(effect()) {
-            qDebug() << "Effect set from QML, should copy properties";
-        }
         const QSurfaceFormat& format = painter->context()->format();
         qDebug() << "MultiBillboard: OpenGL version " << format.majorVersion() << "." << format.minorVersion();
         if ( ! (format.majorVersion() > 3 || (format.majorVersion() == 3 && format.minorVersion() >= 3)) )
         {
             qDebug("MultiBillboard: Geometry shader requires OpenGL >= 3.3. Falling back to CPU billboards.");
-            useGeometryShader = false;
+            m_useGeometryShader = false;
         } else {
-            useGeometryShader = true;
+            m_useGeometryShader = true;
         }
         firstPaint = false;
     }
+    return m_useGeometryShader;
+}
 
-    //    if(m_sortPoints == BackToFront) {
-    //        QMultiMap<double, QVector3D> sortedPoints;
-    //        for(int i = 0; i < m_points.count(); i++) {
-    //            const QVector3D &center = m_points.at(i);
-    //            const QVector4D &depthVector = painter->modelViewMatrix() * center;
-    //            double depth = depthVector.z();
-    //            sortedPoints.insert(depth, center);
-    //        }
-    //        m_points.clear();
-    //        QMapIterator<double, QVector3D> i(sortedPoints);
-    //        while(i.hasNext()) {
-    //            m_points.push_back(i.next().value());
-    //        }
-    //        sortedPoints.clear();
-    //    }
+void MultiBillboard::setTexture(const QUrl &value)
+{
+    if(m_texture != value && !value.isEmpty()) {
+        if(m_texture2D) {
+            m_texture2D->cleanupResources();
+        }
+        m_texture2D = new QGLTexture2D(this);
+        m_texture2D->setUrl(value);
+    }
+}
 
+void MultiBillboard::drawItem(QGLPainter *painter) {
     double currentFps = 1000.0 / fpsTimer.restart();
     m_fps = 0.9*m_fps + 0.1 * currentFps;
     emit fpsChanged(m_fps);
 
     if(m_dataSource) {
-        if(useGeometryShader) {
+        if(hasGeometryShaderSupport(painter)) {
             drawGeometryShaderBillboards(painter);
         } else {
             drawCPUBillboards(painter);
         }
     }
+}
+
+void MultiBillboard::drawEffectSetup(QGLPainter *painter, bool &viewportBlend, bool &effectBlend)
+{
+    m_effect->setUseGeometryShader(hasGeometryShaderSupport(painter));
+    if(m_texture2D) {
+        m_texture2D->bind();
+    }
+    // Setting our custom effect must be done before passing any data
+    painter->setUserEffect(m_effect);
+}
+
+void MultiBillboard::drawEffectCleanup(QGLPainter *painter, bool &viewportBlend, bool &effectBlend)
+{
+    if(m_texture2D) {
+        // Uncomment this line to waste GPU bandwidth and avoid the segfault at the
+        // end of running your program.
+        // This basically cleans up all resources used by the texture for each drawed
+        // frame. This happens while there is still a GL context, and so avoids
+        // the annoying segfault.
+//        m_texture2D->cleanupResources();
+    }
+    painter->setStandardEffect(QGL::FlatColor);
+    painter->setColor(Qt::white);
+    painter->glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    if (viewportBlend != effectBlend) {
+        if (effectBlend)
+            glDisable(GL_BLEND);
+        else
+            glEnable(GL_BLEND);
+    }
+}
+
+void MultiBillboard::handleOpenglContextIsAboutToBeDestroyedYeah()
+{
+    m_texture2D->cleanupResources();
 }
 
 void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
@@ -74,9 +108,6 @@ void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
     // TODO: Add sizes as an attribute so geometry shader knows how large the billboards should be
 
     painter->clearAttributes();
-
-    // Setting our custom effect must be done before passing any data
-    painter->setUserEffect(m_effect);
 
     // After the effect has been set, we may start passing data (perhaps the effect resets some painter props?)
 
@@ -173,5 +204,10 @@ void MultiBillboard::drawCPUBillboards(QGLPainter *painter) {
 
 MultiBillboard::~MultiBillboard()
 {
-    delete m_effect;
+    if(m_effect) {
+        delete m_effect;
+    }
+    if(m_texture2D) {
+        delete m_texture2D;
+    }
 }
