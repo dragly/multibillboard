@@ -85,7 +85,7 @@ private:
     CustomEffect* m_effect;
 
     bool firstPaint;
-    bool useGeometryShader;
+    bool m_useGeometryShader;
     QQuickViewport* viewport;
     void drawCPUBillboards(QGLPainter *painter);
     void drawGeometryShaderBillboards(QGLPainter *painter);

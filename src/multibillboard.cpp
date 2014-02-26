@@ -14,7 +14,7 @@ using namespace std;
 MultiBillboard::MultiBillboard(QQuickItem *parent) :
     QQuickItem3D(parent),
     firstPaint(true),
-    useGeometryShader(false),
+    m_useGeometryShader(false),
     m_dataSource(0),
     m_firstVertexBuild(true),
     bConnectedToOpenGLContextSignal(false),
@@ -23,8 +23,6 @@ MultiBillboard::MultiBillboard(QQuickItem *parent) :
     m_effect = new CustomEffect();
 }
 
-
-
 bool MultiBillboard::hasGeometryShaderSupport(QGLPainter *painter) {
     if(firstPaint) {
         const QSurfaceFormat& format = painter->context()->format();
@@ -32,13 +30,13 @@ bool MultiBillboard::hasGeometryShaderSupport(QGLPainter *painter) {
         if ( ! (format.majorVersion() > 3 || (format.majorVersion() == 3 && format.minorVersion() >= 3)) )
         {
             qDebug("MultiBillboard: Geometry shader requires OpenGL >= 3.3. Falling back to CPU billboards.");
-            useGeometryShader = false;
+            m_useGeometryShader = false;
         } else {
-            useGeometryShader = true;
+            m_useGeometryShader = true;
         }
         firstPaint = false;
     }
-    return useGeometryShader;
+    return m_useGeometryShader;
 }
 
 void MultiBillboard::setTexture(const QUrl &value)
@@ -68,10 +66,7 @@ void MultiBillboard::drawItem(QGLPainter *painter) {
 
 void MultiBillboard::drawEffectSetup(QGLPainter *painter, bool &viewportBlend, bool &effectBlend)
 {
-    if(!hasGeometryShaderSupport(painter)) {
-        QQuickItem3D::drawEffectSetup(painter, viewportBlend, effectBlend);
-        return;
-    }
+    m_effect->setUseGeometryShader(hasGeometryShaderSupport(painter));
     if(m_texture2D) {
         m_texture2D->bind();
     }
@@ -81,10 +76,6 @@ void MultiBillboard::drawEffectSetup(QGLPainter *painter, bool &viewportBlend, b
 
 void MultiBillboard::drawEffectCleanup(QGLPainter *painter, bool &viewportBlend, bool &effectBlend)
 {
-    if(!hasGeometryShaderSupport(painter)) {
-        QQuickItem3D::drawEffectCleanup(painter, viewportBlend, effectBlend);
-        return;
-    }
     if(m_texture2D) {
         // Uncomment this line to waste GPU bandwidth and avoid the segfault at the
         // end of running your program.
