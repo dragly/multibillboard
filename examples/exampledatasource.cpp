@@ -2,6 +2,8 @@
 #include <QColor4ub>
 #include <cmath>
 #include <iostream>
+#include <QSize>
+#include <compphys/multibillboard/databundle.h>
 
 using std::cout;
 using std::endl;
@@ -11,15 +13,12 @@ ExampleDataSource::ExampleDataSource()
 
 }
 
-QGLVertexBundle *ExampleDataSource::vertexBundle()
+QArray<DataBundle> *ExampleDataSource::dataBundles()
 {
-    return &m_vertexBundle;
+    return &m_dataBundles;
 }
 
 void ExampleDataSource::generateData() {
-    m_colors.clear();
-    m_sizes.clear();
-    m_positions.clear();
 
     double spacing = 1;
     double frequency = 0.1;
@@ -27,6 +26,8 @@ void ExampleDataSource::generateData() {
     QVector2D size(0.2,0.2);
 //    QVector2D size(1.0,1.0);
 
+    QArray<QVector3D> positions;
+    QArray<QVector3D> positions2;
     for(int i = 0; i < m_numPointsPerDimension; i++) {
         for(int j = 0; j < m_numPointsPerDimension; j++) {
             for(int k = 0; k < m_numPointsPerDimension; k++) {
@@ -34,28 +35,27 @@ void ExampleDataSource::generateData() {
                 QVector3D center2 = center;
                 center.setX(center.x() + cos(2 * frequency * center2.z()));
                 center.setZ(center.z() + sin(2 * frequency * center2.y()));
-                m_positions.push_back(center);
-                m_colors.push_back(color);
-                m_sizes.push_back(size);
+
+                if(i % 4) {
+                    positions.push_back(center);
+                } else {
+                    positions2.push_back(center);
+                }
             }
         }
     }
+    DataBundle bundle;
+    bundle.setPositions(positions);
+    bundle.setColor(QColor(0,255,178,255));
+    bundle.setSize(QVector2D(0.1, 0.1));
+    bundle.generateVertexBundle();
+    m_dataBundles.append(bundle);
+    DataBundle bundle2;
+    bundle2.setPositions(positions2);
+    bundle2.setColor(QColor(255,0,255,255));
+    bundle2.setSize(QVector2D(0.2, 0.2));
+    bundle2.generateVertexBundle();
+    m_dataBundles.append(bundle2);
+    cout << "Showing a total of " << positions.size() << " points." << endl;
 
-    m_vertexBundle.addAttribute(QGL::Position, m_positions);
-    m_vertexBundle.addAttribute(QGL::Color, m_colors);
-    m_vertexBundle.addAttribute(QGL::CustomVertex0, m_sizes);
-    cout << "Showing a total of " << m_positions.size() << " points." << endl;
-
-}
-
-const QArray<QVector3D> &ExampleDataSource::getPositions() {
-    return m_positions;
-}
-
-const QArray<QColor4ub> &ExampleDataSource::getColors() {
-    return m_colors;
-}
-
-const QArray<QVector2D> &ExampleDataSource::getSizes() {
-    return m_sizes;
 }

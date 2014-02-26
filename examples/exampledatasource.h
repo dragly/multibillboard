@@ -7,20 +7,9 @@ class ExampleDataSource : public DataSource
 {
     Q_OBJECT
     Q_PROPERTY(int numPointsPerDimension READ numPointsPerDimension WRITE setNumPointsPerDimension NOTIFY numPointsPerDimensionChanged)
-private:
-    QArray<QVector3D> m_positions;
-    QArray<QColor4ub> m_colors;
-    QArray<QVector2D > m_sizes;
-    int m_numPointsPerDimension;
-
-    QGLVertexBundle m_vertexBundle;
-    void generateData();
 public:
     ExampleDataSource();
-    virtual const QArray<QVector3D> &getPositions();
-    virtual const QArray<QColor4ub> &getColors();
-    virtual const QArray<QVector2D > &getSizes();
-    virtual QGLVertexBundle* vertexBundle();
+    QArray<DataBundle> *dataBundles();
 
     int numPointsPerDimension() const
     {
@@ -37,6 +26,11 @@ public slots:
     }
 signals:
     void numPointsPerDimensionChanged(int arg);
+private:
+    int m_numPointsPerDimension;
+
+    void generateData();
+    QArray<DataBundle> m_dataBundles;
 };
 
 #endif // EXAMPLEDATASOURCE_H

@@ -15,13 +15,15 @@ HEADERS_OUT_DIR = $$OUT_PWD/include/compphys/multibillboard
 SOURCES += multibillboard.cpp \
     customeffect.cpp \
     datasource.cpp \
-    multibillboardmodule.cpp
+    multibillboardmodule.cpp \
+    databundle.cpp
 
 HEADERS += \
     multibillboard.h \
     customeffect.h \
     datasource.h \
-    multibillboardmodule.h
+    multibillboardmodule.h \
+    databundle.h
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
@@ -48,7 +50,7 @@ unix {
 
 # Copy the necessary headers as well
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
-    copyheaders.commands = $$QMAKE_MKDIR $$HEADERS_OUT_DIR && $(COPY_DIR) $$PWD/datasource.h $$HEADERS_OUT_DIR
+    copyheaders.commands = $$QMAKE_MKDIR $$HEADERS_OUT_DIR && $(COPY_DIR) $$PWD/datasource.h $$PWD/databundle.h $$HEADERS_OUT_DIR
     first.depends = $(first) copyheaders
     export(first.depends)
     export(copyheaders.commands)
@@ -56,7 +58,7 @@ unix {
 }
 
 # Set up installation of headers
-target_headers.files = datasource.h
+target_headers.files = datasource.h databundle.h
 unix {
     headersInstallPath = $$[QT_INSTALL_HEADERS]/compphys/multibillboard
     target_headers.path = $$headersInstallPath
@@ -65,3 +67,5 @@ unix {
 
 OTHER_FILES += README.md \
     qmldir
+
+QMAKE_CXXFLAGS += -std=c++0x
