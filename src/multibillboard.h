@@ -13,6 +13,7 @@ class MultiBillboard : public QQuickItem3D
     Q_OBJECT
     Q_PROPERTY(DataSource *dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
     Q_PROPERTY(double fps READ fps NOTIFY fpsChanged)
+    Q_PROPERTY(QUrl texture READ texture WRITE setTexture NOTIFY textureChanged)
 
 public:
     explicit MultiBillboard(QQuickItem *parent = 0);
@@ -28,8 +29,19 @@ public:
         return m_dataSource;
     }
 
+    bool bConnectedToOpenGLContextSignal;
+
+    bool hasGeometryShaderSupport(QGLPainter *painter);
+    void setTexture(const QUrl &value);
+    QUrl texture() const
+    {
+        return m_texture;
+    }
+
 protected:
-    void drawItem(QGLPainter *painter);
+    virtual void drawItem(QGLPainter *painter);
+    virtual void drawEffectSetup(QGLPainter *painter, bool &viewportBlend, bool &effectBlend);
+    virtual void drawEffectCleanup(QGLPainter *painter, bool &viewportBlend, bool &effectBlend);
 signals:
 
     void spacingChanged(double arg);
@@ -40,6 +52,8 @@ signals:
 
     void dataSourceChanged(DataSource *arg);
 
+    void textureChanged(QUrl arg);
+
 public slots:
     void setDataSource(DataSource *arg)
     {
@@ -48,6 +62,9 @@ public slots:
             emit dataSourceChanged(arg);
         }
     }
+
+private Q_SLOTS:
+    void handleOpenglContextIsAboutToBeDestroyedYeah();
 
 private:
     QElapsedTimer fpsTimer;
@@ -69,9 +86,12 @@ private:
 
     bool firstPaint;
     bool useGeometryShader;
+    QQuickViewport* viewport;
     void drawCPUBillboards(QGLPainter *painter);
     void drawGeometryShaderBillboards(QGLPainter *painter);
     DataSource *m_dataSource;
+    QUrl m_texture;
+    QGLTexture2D *m_texture2D;
 };
 
 #endif // MULTISPHERE2_H
