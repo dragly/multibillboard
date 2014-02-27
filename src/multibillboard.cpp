@@ -102,7 +102,7 @@ void MultiBillboard::handleOpenglContextIsAboutToBeDestroyedYeah()
 }
 
 void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
-    if(m_dataSource->dataBundles()->count() == 0) {
+    if(m_dataSource->dataBundles() == 0 || m_dataSource->dataBundles()->count() == 0) {
         return;
     }
 

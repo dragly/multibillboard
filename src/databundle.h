@@ -12,7 +12,7 @@ class DataBundle
 public:
     DataBundle();
 
-    const QArray<QVector3D>& positions() const;
+    QArray<QVector3D> &positions();
     void setPositions(const QArray<QVector3D> &positions);
 
     const QColor& color() const;

@@ -34,7 +34,6 @@ OTHER_FILES += README.md
 
 QML_IMPORT_PATH = $$OUT_PWD/../src/
 INCLUDEPATH += $$OUT_PWD/../src/include/
-DEPENDPATH += -L$$OUT_PWD/../src/
 
 LIBS += -L$$OUT_PWD/../src/ -lMultiBillboard
 

@@ -4,7 +4,7 @@ DataBundle::DataBundle() :
     m_vertexBundleDirty(false)
 {
 }
-const QArray<QVector3D> &DataBundle::positions() const
+QArray<QVector3D> &DataBundle::positions()
 {
     return m_positions;
 }
