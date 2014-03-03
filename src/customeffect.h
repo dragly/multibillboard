@@ -15,6 +15,9 @@ public:
     QVector3D systemSize() const;
     void setSystemSize(const QVector3D &systemSize);
 
+    bool hasPeriodicCopies() const;
+    void setHasPeriodicCopies(bool hasPeriodicCopies);
+
 protected:
     bool beforeLink();
 
@@ -22,8 +25,10 @@ protected:
 private:
     bool m_firstPaint;
     bool m_useGeometryShader;
-    QOpenGLShaderProgram* m_program;
     bool m_regenerate;
+    bool m_hasPeriodicCopies;
+    QOpenGLShaderProgram* m_program;
+
     QVector2D m_size;
     QVector3D m_systemSize;
     QColor m_color;

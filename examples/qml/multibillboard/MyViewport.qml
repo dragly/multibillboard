@@ -51,6 +51,10 @@ Viewport  {
     blending: true
     fovzoom: false
 
+    Component.onCompleted: {
+        forceActiveFocus()
+    }
+
     light: Light {
         ambientColor: Qt.rgba(1,1,1,1)
         position.x: myCamera.eye.normalized().x * 70
@@ -61,7 +65,7 @@ Viewport  {
 
     camera: Camera {
         id: myCamera
-        eye: Qt.vector3d(75,75,45)
+        eye: Qt.vector3d(250,250,250)
         nearPlane: 5
         farPlane: 5000
     }
@@ -74,6 +78,7 @@ Viewport  {
     MultiBillboard {
         id: multiSphere
         dataSource: exampleDataSource
+        hasPeriodicCopies: true
 ////        cullFaces: Item3D.CullBackFaces
 ////        sortPoints: Item3D.BackToFront
 
@@ -91,6 +96,12 @@ Viewport  {
         interval: 1
         onTriggered: {
             myCamera.tiltPanRollCenter(0,0.01,0)
+        }
+    }
+
+    Keys.onPressed: {
+        if(event.key === Qt.Key_P) {
+            multiSphere.hasPeriodicCopies = !multiSphere.hasPeriodicCopies
         }
     }
 }

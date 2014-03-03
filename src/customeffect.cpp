@@ -5,6 +5,7 @@
 CustomEffect::CustomEffect() :
     QGLShaderProgramEffect(),
     m_useGeometryShader(false),
+    m_hasPeriodicCopies(false),
     m_size(QVector2D(1.0, 1.0)),
     m_systemSize(QVector3D(0,0,0)),
     m_color(QColor(255,255,255,255))
@@ -17,7 +18,6 @@ void CustomEffect::setUseGeometryShader(bool value)
 }
 
 bool CustomEffect::beforeLink() {
-
     QByteArray vertexCode = "#version 330\n"
             "uniform mat4 qt_ModelViewProjectionMatrix;\n"
             "in vec4 qt_Vertex;\n"
@@ -58,21 +58,40 @@ bool CustomEffect::beforeLink() {
     //    qDebug() << fragmentCode;
     //    setFragmentShader(fragmentCode);
     if(m_useGeometryShader) {
-        QByteArray geometryCode = "#version 400\n"
-                "layout(invocations=27) in;\n"
+        QByteArray geometryCode =
+                (m_hasPeriodicCopies ?
+                     QByteArray(
+                         "#version 400\n"
+                         "layout(invocations=27) in;\n"
+                         )
+                   :
+                     QByteArray(
+                         "#version 330\n"
+                         )
+                     )+
                 "layout( points ) in;\n"
                 "layout( triangle_strip, max_vertices = 4 ) out;\n"
                 "uniform mat4 qt_ProjectionMatrix;\n"
                 "uniform mat4 qt_ModelViewProjectionMatrix;\n"
                 "uniform vec2 size;\n"
-                "uniform vec3 system_size;\n"
+                "uniform vec3 systemSize;\n"
                 "out vec2 texCoord;\n"
                 "\n"
                 "void main(void) {\n"
-                "    int x = gl_InvocationID % 3 - 1;\n"
-                "    int y = (gl_InvocationID/3) % 3 - 1;\n"
-                "    int z = (gl_InvocationID/9) - 1;\n"
-                "    vec4 pos = gl_in[0].gl_Position + qt_ModelViewProjectionMatrix*vec4(system_size.x*x,system_size.y*y,system_size.z*z,0);\n"
+                +(m_hasPeriodicCopies ?
+                      QByteArray(
+                          "    int x = gl_InvocationID % 3 - 1;\n"
+                          "    int y = (gl_InvocationID/3) % 3-1;\n"
+                          "    int z = (gl_InvocationID/9)-1;\n"
+                          )
+                    :
+                      QByteArray(
+                          "    int x = 0;\n"
+                          "    int y = 0;\n"
+                          "    int z = 0;\n"
+                          )
+                      )+
+                "    vec4 pos = gl_in[0].gl_Position + qt_ModelViewProjectionMatrix*vec4(systemSize.x*x,systemSize.y*y,systemSize.z*z,0);\n"
                 "    gl_Position = pos + qt_ProjectionMatrix*vec4(-size.x, -size.y, 0.0, 0.0);\n"
                 "    texCoord = vec2(0.0, 0.0);\n"
                 "    EmitVertex();\n"
@@ -102,6 +121,17 @@ void CustomEffect::afterLink() {
     m_systemSizeLocation = program()->uniformLocation("systemSize");
     m_colorLocation = program()->uniformLocation("color");
 }
+bool CustomEffect::hasPeriodicCopies() const
+{
+    return m_hasPeriodicCopies;
+}
+
+void CustomEffect::setHasPeriodicCopies(bool hasPeriodicCopies)
+{
+    m_hasPeriodicCopies = hasPeriodicCopies;
+    setFragmentShader("");
+}
+
 QVector3D CustomEffect::systemSize() const
 {
     return m_systemSize;

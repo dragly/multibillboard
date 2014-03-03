@@ -14,6 +14,7 @@ class MultiBillboard : public QQuickItem3D
     Q_PROPERTY(DataSource *dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
     Q_PROPERTY(double fps READ fps NOTIFY fpsChanged)
     Q_PROPERTY(QUrl texture READ texture WRITE setTexture NOTIFY textureChanged)
+    Q_PROPERTY(bool hasPeriodicCopies READ hasPeriodicCopies WRITE setHasPeriodicCopies NOTIFY hasPeriodicCopiesChanged)
 
 public:
     explicit MultiBillboard(QQuickItem *parent = 0);
@@ -38,6 +39,11 @@ public:
         return m_texture;
     }
 
+    bool hasPeriodicCopies() const
+    {
+        return m_effect->hasPeriodicCopies();
+    }
+
 protected:
     virtual void drawItem(QGLPainter *painter);
     virtual void drawEffectSetup(QGLPainter *painter, bool &viewportBlend, bool &effectBlend);
@@ -54,12 +60,22 @@ signals:
 
     void textureChanged(QUrl arg);
 
+    void hasPeriodicCopiesChanged(bool arg);
+
 public slots:
     void setDataSource(DataSource *arg)
     {
         if (m_dataSource != arg) {
             m_dataSource = arg;
             emit dataSourceChanged(arg);
+        }
+    }
+
+    void setHasPeriodicCopies(bool arg)
+    {
+        if (m_effect->hasPeriodicCopies() != arg) {
+            m_effect->setHasPeriodicCopies(arg);
+            emit hasPeriodicCopiesChanged(arg);
         }
     }
 
