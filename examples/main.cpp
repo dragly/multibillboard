@@ -19,8 +19,8 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QSurfaceFormat f;
-    f.setMajorVersion(3);
-    f.setMinorVersion(3);
+    f.setMajorVersion(4);
+    f.setMinorVersion(1);
 //    f.setProfile(QSurfaceFormat::CoreProfile);
 //    f.setProfile(QSurfaceFormat::CompatibilityProfile);
     QtQuick2ApplicationViewer view;

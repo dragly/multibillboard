@@ -14,6 +14,16 @@ void DataBundle::generateVertexBundle() {
     m_vertexBundle.addAttribute(QGL::Position, m_positions);
     m_vertexBundleDirty = false;
 }
+QVector3D DataBundle::systemSize() const
+{
+    return m_systemSize;
+}
+
+void DataBundle::setSystemSize(const QVector3D &systemSize)
+{
+    m_systemSize = systemSize;
+}
+
 
 void DataBundle::setPositions(const QArray<QVector3D> &positions)
 {

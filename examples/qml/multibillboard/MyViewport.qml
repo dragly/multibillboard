@@ -68,7 +68,7 @@ Viewport  {
 
     ExampleDataSource {
         id: exampleDataSource
-        numPointsPerDimension: 30
+        numPointsPerDimension: 160
     }
 
     MultiBillboard {

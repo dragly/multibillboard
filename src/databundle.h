@@ -24,9 +24,13 @@ public:
     const QGLVertexBundle& vertexBundle();
     void generateVertexBundle();
 
+    QVector3D systemSize() const;
+    void setSystemSize(const QVector3D &systemSize);
+
 private:
 
     QArray<QVector3D> m_positions;
+    QVector3D m_systemSize;
     QColor m_color;
     QVector2D m_size;
     QGLVertexBundle m_vertexBundle;

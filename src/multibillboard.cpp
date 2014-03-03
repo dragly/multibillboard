@@ -127,6 +127,7 @@ void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
         // Set the rest of the vertex bundle (basically only positions)
         m_effect->setSize(bundle.size());
         m_effect->setColor(bundle.color());
+        m_effect->setSystemSize(bundle.systemSize());
         m_effect->update(painter, QGLPainter::UpdateColor);
         painter->setVertexBundle(bundle.vertexBundle());
         painter->draw(QGL::DrawingMode(QGL::Points), bundle.vertexBundle().vertexCount());
