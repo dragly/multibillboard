@@ -23,22 +23,22 @@ Viewport  {
 
     light: Light {
         ambientColor: Qt.rgba(1,1,1,1)
-        position.x: myCamera.eye.normalized().x * 70
-        position.y: myCamera.eye.normalized().y * 70
-        position.z: myCamera.eye.normalized().z * 70
-        quadraticAttenuation: 0.0001
+        position.x: myCamera.eye.x
+        position.y: myCamera.eye.y
+        position.z: myCamera.eye.z
+        linearAttenuation: 0.01
     }
 
     camera: Camera {
         id: myCamera
-        eye: Qt.vector3d(250,250,250)
+        eye: Qt.vector3d(50,50,50)
         nearPlane: 5
         farPlane: 5000
     }
 
     ExampleDataSource {
         id: exampleDataSource
-        numPointsPerDimension: 160
+        numPointsPerDimension: 50
     }
 
     MultiBillboard {
