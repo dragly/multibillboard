@@ -33,8 +33,8 @@ void ExampleDataSource::generateData() {
             for(int k = 0; k < m_numPointsPerDimension; k++) {
                 QVector3D center(-m_numPointsPerDimension/2 + i * spacing,-m_numPointsPerDimension/2 + j*spacing,-m_numPointsPerDimension/2 + k*spacing);
                 QVector3D center2 = center;
-//                center.setX(center.x() + cos(2 * frequency * center2.z()));
-//                center.setZ(center.z() + sin(2 * frequency * center2.y()));
+                center.setX(center.x() + cos(2 * frequency * center2.z()));
+                center.setZ(center.z() + sin(2 * frequency * center2.y()));
 
                 positions.push_back(center);
 

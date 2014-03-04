@@ -51,10 +51,6 @@ void MultiBillboard::setTexture(const QUrl &value)
 }
 
 void MultiBillboard::drawItem(QGLPainter *painter) {
-    double currentFps = 1000.0 / fpsTimer.restart();
-    m_fps = 0.9*m_fps + 0.1 * currentFps;
-    emit fpsChanged(m_fps);
-
     if(m_dataSource) {
         if(hasGeometryShaderSupport(painter)) {
             drawGeometryShaderBillboards(painter);

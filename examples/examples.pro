@@ -13,9 +13,11 @@ DEPLOYMENTFOLDERS = folder_01
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    exampledatasource.cpp
+    exampledatasource.cpp \
+    frameratecounter.cpp
 
-HEADERS += exampledatasource.h
+HEADERS += exampledatasource.h \
+    frameratecounter.h
 
 TARGET = multibillboard_demo
 

@@ -12,18 +12,12 @@ class MultiBillboard : public QQuickItem3D
 {
     Q_OBJECT
     Q_PROPERTY(DataSource *dataSource READ dataSource WRITE setDataSource NOTIFY dataSourceChanged)
-    Q_PROPERTY(double fps READ fps NOTIFY fpsChanged)
     Q_PROPERTY(QUrl texture READ texture WRITE setTexture NOTIFY textureChanged)
     Q_PROPERTY(bool hasPeriodicCopies READ hasPeriodicCopies WRITE setHasPeriodicCopies NOTIFY hasPeriodicCopiesChanged)
 
 public:
     explicit MultiBillboard(QQuickItem *parent = 0);
     virtual ~MultiBillboard();
-
-    double fps() const
-    {
-        return m_fps;
-    }
 
     DataSource *dataSource() const
     {
@@ -54,8 +48,6 @@ signals:
 
     void frequencyChanged(double arg);
 
-    void fpsChanged(double arg);
-
     void dataSourceChanged(DataSource *arg);
 
     void textureChanged(QUrl arg);
@@ -83,13 +75,10 @@ private Q_SLOTS:
     void handleOpenglContextIsAboutToBeDestroyedYeah();
 
 private:
-    QElapsedTimer fpsTimer;
     QGLSceneNode *m_topNode;
     bool m_sceneSet;
     QGLSceneNode* m_geometry;
     QGLAbstractScene *scene;
-
-    double m_fps;
 
     QArray<QVector3D> vertices;
     QArray<uint> indices;

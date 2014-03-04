@@ -12,10 +12,12 @@
 #include <QScreen>
 
 #include <qtquick2applicationviewer/qtquick2applicationviewer.h>
+#include "frameratecounter.h"
 
 int main(int argc, char *argv[])
 {
     qmlRegisterType<ExampleDataSource>("CompPhys.MultiBillboardDemo", 1, 0, "ExampleDataSource");
+    qmlRegisterType<FrameRateCounter>("CompPhys.MultiBillboardDemo", 1, 0, "FrameRateCounter");
     QGuiApplication app(argc, argv);
 
     QSurfaceFormat f;
