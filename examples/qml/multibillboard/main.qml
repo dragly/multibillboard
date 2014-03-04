@@ -26,7 +26,7 @@ Viewport  {
         position.x: myCamera.eye.x
         position.y: myCamera.eye.y
         position.z: myCamera.eye.z
-        linearAttenuation: 0.01
+        linearAttenuation: 0.08
     }
 
     camera: Camera {

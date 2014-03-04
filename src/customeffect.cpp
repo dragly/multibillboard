@@ -62,6 +62,7 @@ bool CustomEffect::beforeLink() {
                 "struct qt_SingleLightParameters {\n"
                 "    vec4 position;\n"
                 "    float linearAttenuation;\n"
+                "    float constantAttenuation;\n"
                 "    float quadraticAttenuation;\n"
                 "};\n"
                 "uniform qt_SingleLightParameters qt_Light;\n"
@@ -85,7 +86,8 @@ bool CustomEffect::beforeLink() {
                       )+
                 "    vec4 displacement = vec4(systemSize.x*x,systemSize.y*y,systemSize.z*z,0);\n"
                 "    vec4 vertex = qt_ModelViewMatrix * (vertexPosition[0] + displacement);\n"
-                "    lightIntensity = clamp(1 - qt_Light.linearAttenuation * length(qt_Light.position.xyz - vertex.xyz), 0.0, 1.0);\n"
+                "    float distanceFromLight = length(qt_Light.position.xyz - vertex.xyz);"
+                "    lightIntensity = clamp(1 / (qt_Light.linearAttenuation * distanceFromLight + qt_Light.quadraticAttenuation * distanceFromLight * distanceFromLight), 0.0, 1.0);\n"
                 "    vec4 pos = gl_in[0].gl_Position + qt_ModelViewProjectionMatrix * displacement;\n"
                 "    gl_Position = pos + qt_ProjectionMatrix*vec4(-size.x, -size.y, 0.0, 0.0);\n"
                 "    texCoord = vec2(0.0, 0.0);\n"
