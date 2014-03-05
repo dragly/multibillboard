@@ -6,6 +6,7 @@ CustomEffect::CustomEffect() :
     QGLShaderProgramEffect(),
     m_useGeometryShader(false),
     m_hasPeriodicCopies(false),
+    m_periodicCopiesAllowed(true),
     m_size(QVector2D(1.0, 1.0)),
     m_systemSize(QVector3D(0,0,0)),
     m_color(QColor(255,255,255,255))
@@ -139,6 +140,16 @@ void CustomEffect::afterLink() {
     m_systemSizeLocation = program()->uniformLocation("systemSize");
     m_colorLocation = program()->uniformLocation("color");
 }
+bool CustomEffect::periodicCopiesAllowed() const
+{
+    return m_periodicCopiesAllowed;
+}
+
+void CustomEffect::setPeriodicCopiesAllowed(bool periodicCopiesAllowed)
+{
+    m_periodicCopiesAllowed = periodicCopiesAllowed;
+}
+
 
 bool CustomEffect::hasPeriodicCopies() const
 {
@@ -147,8 +158,12 @@ bool CustomEffect::hasPeriodicCopies() const
 
 void CustomEffect::setHasPeriodicCopies(bool hasPeriodicCopies)
 {
-    m_hasPeriodicCopies = hasPeriodicCopies;
-    setFragmentShader("");
+    if(m_periodicCopiesAllowed) {
+        m_hasPeriodicCopies = hasPeriodicCopies;
+        setFragmentShader("");
+    } else {
+        m_hasPeriodicCopies = false;
+    }
 }
 
 QVector3D CustomEffect::systemSize() const

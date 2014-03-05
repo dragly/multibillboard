@@ -9,7 +9,7 @@ class ExampleDataSource : public DataSource
     Q_PROPERTY(int numPointsPerDimension READ numPointsPerDimension WRITE setNumPointsPerDimension NOTIFY numPointsPerDimensionChanged)
 public:
     ExampleDataSource();
-    QArray<DataBundle> *dataBundles();
+    QArray<DataBundle*> *dataBundles();
 
     int numPointsPerDimension() const
     {
@@ -30,7 +30,7 @@ private:
     int m_numPointsPerDimension;
 
     void generateData();
-    QArray<DataBundle> m_dataBundles;
+    QArray<DataBundle*> m_dataBundles;
 };
 
 #endif // EXAMPLEDATASOURCE_H

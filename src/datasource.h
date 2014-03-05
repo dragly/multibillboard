@@ -19,7 +19,7 @@ class DataSource : public QObject
 public:
     DataSource(QObject *parent = 0);
 
-    virtual QArray<DataBundle> *dataBundles() {
+    virtual QArray<DataBundle*> *dataBundles() {
         cerr << "Returning from abstract DataSource."
                 "This should not happen." << endl;
         return 0;

@@ -34,6 +34,12 @@ bool MultiBillboard::hasGeometryShaderSupport(QGLPainter *painter) {
         } else {
             m_useGeometryShader = true;
         }
+        if ( ! (format.majorVersion() > 4 || (format.majorVersion() == 4 && format.minorVersion() >= 0)) )
+        {
+            qDebug("MultiBillboard: Periodic boundary conditions and geometry shader in combination requires OpenGL >= 4.0. Disabling the use of periodic boundary conditions.");
+            setHasPeriodicCopies(false);
+            m_effect->setPeriodicCopiesAllowed(false);
+        }
         firstPaint = false;
     }
     return m_useGeometryShader;
@@ -119,14 +125,14 @@ void MultiBillboard::drawGeometryShaderBillboards(QGLPainter *painter) {
     painter->glDisableVertexAttribArray(GLuint(QGL::Normal));
     painter->glVertexAttrib3f(GLuint(QGL::Normal), normal.x(), normal.y(), normal.z());
 
-    for(DataBundle& bundle : *(m_dataSource->dataBundles())) {
+    for(DataBundle* bundle : *(m_dataSource->dataBundles())) {
         // Set the rest of the vertex bundle (basically only positions)
-        m_effect->setSize(bundle.size());
-        m_effect->setColor(bundle.color());
-        m_effect->setSystemSize(bundle.systemSize());
+        m_effect->setSize(bundle->size());
+        m_effect->setColor(bundle->color());
+        m_effect->setSystemSize(bundle->systemSize());
         m_effect->update(painter, QGLPainter::UpdateColor);
-        painter->setVertexBundle(bundle.vertexBundle());
-        painter->draw(QGL::DrawingMode(QGL::Points), bundle.vertexBundle().vertexCount());
+        painter->setVertexBundle(bundle->vertexBundle());
+        painter->draw(QGL::DrawingMode(QGL::Points), bundle->vertexBundle().vertexCount());
     }
 }
 

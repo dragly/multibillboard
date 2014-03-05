@@ -18,6 +18,9 @@ public:
     bool hasPeriodicCopies() const;
     void setHasPeriodicCopies(bool hasPeriodicCopies);
 
+    bool periodicCopiesAllowed() const;
+    void setPeriodicCopiesAllowed(bool periodicCopiesAllowed);
+
 protected:
     bool beforeLink();
 
@@ -27,6 +30,7 @@ private:
     bool m_useGeometryShader;
     bool m_regenerate;
     bool m_hasPeriodicCopies;
+    bool m_periodicCopiesAllowed;
     QOpenGLShaderProgram* m_program;
 
     QVector2D m_size;
